@@ -1,0 +1,1993 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚔️ RPG LEGENDS - El Despertar</title>
+
+    <style>
+        /* ============================================
+           🎮 RPG LEGENDS - SISTEMA PROFESIONAL
+           Inspirado en Dofus, Diablo, WoW
+        ============================================ */
+
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap');
+
+        :root {
+            --color-primary: #ffd700;
+            --color-secondary: #ff6b35;
+            --color-magic: #00d4ff;
+            --color-danger: #ff2a2a;
+            --color-success: #00ff88;
+            --color-bg-dark: #0a0a0f;
+            --color-bg-panel: rgba(15, 15, 25, 0.95);
+            --color-border: #3a3a4a;
+            --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            --gradient-magic: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            --shadow-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: var(--color-bg-dark);
+            color: #e0e0e0;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* ============================================
+           🎬 INTRO CINEMÁTICA
+        ============================================ */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 1s ease;
+        }
+
+            #intro-screen h1 {
+                font-family: 'Cinzel', serif;
+                font-size: 5rem;
+                background: var(--gradient-gold);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+                animation: titlePulse 2s ease-in-out infinite;
+                letter-spacing: 10px;
+            }
+
+        @keyframes titlePulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+                filter: brightness(1.3);
+            }
+        }
+
+        .start-btn {
+            margin-top: 50px;
+            padding: 20px 60px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            background: transparent;
+            border: 3px solid var(--color-primary);
+            color: var(--color-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+            .start-btn:hover {
+                background: var(--color-primary);
+                color: #000;
+                box-shadow: 0 0 30px var(--color-primary);
+                transform: scale(1.1);
+            }
+
+        /* ============================================
+           🏰 LAYOUT PRINCIPAL
+        ============================================ */
+        #game-container {
+            display: none;
+            height: 100vh;
+            grid-template-rows: 60px 1fr 200px;
+            grid-template-columns: 250px 1fr 300px;
+            grid-template-areas:
+                "header header header"
+                "left-panel scene right-panel"
+                "bottom-bar bottom-bar bottom-bar";
+            gap: 10px;
+            padding: 10px;
+        }
+
+        /* ============================================
+           📜 HEADER
+        ============================================ */
+        #game-header {
+            grid-area: header;
+            background: var(--color-bg-panel);
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .game-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            text-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .level-indicator {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .dungeon-badge {
+            background: linear-gradient(135deg, #8b0000 0%, #ff0000 100%);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+        }
+
+        /* ============================================
+           🎮 PANEL IZQUIERDO - PERSONAJE
+        ============================================ */
+        #left-panel {
+            grid-area: left-panel;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .panel-box {
+            background: var(--color-bg-panel);
+            border: 2px solid var(--color-border);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .panel-title {
+            font-family: 'Cinzel', serif;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 10px;
+        }
+
+        /* Avatar del personaje */
+        .character-avatar {
+            width: 100%;
+            height: 180px;
+            background: radial-gradient(circle, #2a2a3a 0%, #1a1a2e 100%);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--color-border);
+        }
+
+            .character-avatar::before {
+                content: '🧙‍♂️';
+                font-size: 5rem;
+                filter: drop-shadow(0 0 20px var(--color-magic));
+                animation: float 3s ease-in-out infinite;
+            }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Barras de stats */
+        .stat-bar {
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        .bar-container {
+            height: 12px;
+            background: #1a1a2e;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .bar-fill::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                animation: shimmer 2s infinite;
+            }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, #ff2a2a, #ff6b6b);
+        }
+
+        .mp-fill {
+            background: linear-gradient(90deg, #0066cc, #00d4ff);
+        }
+
+        .xp-fill {
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+        }
+
+        /* Stats numéricos */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+            .stat-item:hover {
+                background: rgba(255,215,0,0.1);
+                border-color: var(--color-primary);
+                transform: translateY(-2px);
+            }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .stat-name {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* ============================================
+           🌄 ESCENARIO CENTRAL
+        ============================================ */
+        #scene-panel {
+            grid-area: scene;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid var(--color-border);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        #escenario {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.5s ease;
+        }
+
+            #escenario::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.8) 100%);
+                pointer-events: none;
+                z-index: 5;
+            }
+
+        /* Zona de combate */
+        #battle-zone {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            z-index: 10;
+        }
+
+        /* Jugador en escena */
+        #player-sprite {
+            position: absolute;
+            bottom: 100px;
+            left: 100px;
+            width: 80px;
+            height: 80px;
+            background: url('img/personaje.jpeg') center/contain no-repeat;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+            #player-sprite.attacking {
+                animation: attackLunge 0.4s ease;
+            }
+
+        @keyframes attackLunge {
+            0% {
+                transform: translateX(0) scale(1);
+            }
+
+            50% {
+                transform: translateX(50px) scale(1.2);
+            }
+
+            100% {
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        /* Enemigos */
+        .enemy-container {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .enemy-container:hover {
+                transform: translateY(-10px) scale(1.1);
+            }
+
+            .enemy-container.selected {
+                filter: drop-shadow(0 0 20px var(--color-primary));
+                transform: scale(1.15);
+            }
+
+        .enemy-sprite {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+            animation: enemyFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes enemyFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .enemy-hp-bar {
+            width: 80px;
+            height: 8px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            margin: 10px auto 0;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .enemy-hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff2a2a, #ff6b6b);
+            transition: width 0.3s ease;
+        }
+
+        .enemy-name {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            text-shadow: 0 2px 4px black;
+            font-weight: bold;
+        }
+
+        .enemy-type {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        /* Efectos de daño */
+        .damage-popup {
+            position: absolute;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff2a2a;
+            text-shadow: 0 0 10px #ff0000;
+            animation: damageFloat 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes damageFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+
+        .critical-hit {
+            color: #ffd700 !important;
+            font-size: 2.5rem !important;
+            text-shadow: 0 0 20px #ff6b35 !important;
+        }
+
+        /* ============================================
+           📊 PANEL DERECHO - ACCIONES
+        ============================================ */
+        #right-panel {
+            grid-area: right-panel;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Botones de acción estilo RPG */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-btn {
+            position: relative;
+            padding: 15px 20px;
+            background: linear-gradient(145deg, #2a2a3a 0%, #1a1a2e 100%);
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+            .action-btn::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 4px;
+                height: 100%;
+                background: var(--color-primary);
+                transition: width 0.3s ease;
+            }
+
+            .action-btn:hover {
+                background: linear-gradient(145deg, #3a3a4a 0%, #2a2a3e 100%);
+                border-color: var(--color-primary);
+                transform: translateX(5px);
+                box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+            }
+
+                .action-btn:hover::before {
+                    width: 100%;
+                    opacity: 0.1;
+                }
+
+            .action-btn:active {
+                transform: translateX(2px) scale(0.98);
+            }
+
+            .action-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                filter: grayscale(1);
+            }
+
+            .action-btn.attack {
+                border-left-color: #ff2a2a;
+            }
+
+            .action-btn.heal {
+                border-left-color: #00ff88;
+            }
+
+            .action-btn.magic {
+                border-left-color: #00d4ff;
+            }
+
+            .action-btn.item {
+                border-left-color: #ffd700;
+            }
+
+        .btn-icon {
+            font-size: 1.3rem;
+        }
+
+        .btn-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .btn-hotkey {
+            font-size: 0.75rem;
+            color: #666;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Panel de habilidades */
+        .skills-panel {
+            margin-top: 10px;
+        }
+
+        .skill-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .skill-slot {
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .skill-slot:hover {
+                border-color: var(--color-magic);
+                box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+                transform: scale(1.1);
+            }
+
+            .skill-slot .cooldown {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 0%;
+                background: rgba(0,0,0,0.8);
+                transition: height 0.1s linear;
+            }
+
+        /* ============================================
+           📜 PANEL INFERIOR - LOG Y MENÚ
+        ============================================ */
+        #bottom-bar {
+            grid-area: bottom-bar;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Log de combate */
+        .combat-log {
+            flex: 1;
+            background: var(--color-bg-panel);
+            border: 2px solid var(--color-border);
+            border-radius: 15px;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .log-entry.damage {
+            color: #ff6b6b;
+        }
+
+        .log-entry.heal {
+            color: #00ff88;
+        }
+
+        .log-entry.loot {
+            color: #ffd700;
+        }
+
+        .log-entry.system {
+            color: #00d4ff;
+        }
+
+        /* Menú rápido */
+        .quick-menu {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-btn {
+            flex: 1;
+            background: var(--color-bg-panel);
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cinzel', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .menu-btn:hover {
+                background: rgba(255,215,0,0.1);
+                border-color: var(--color-primary);
+            }
+
+        /* ============================================
+           🪟 VENTANAS MODALES PROFESIONALES
+        ============================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            z-index: 5000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .modal-window {
+            background: linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);
+            border: 3px solid var(--color-border);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), var(--shadow-glow);
+            animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, rgba(255,215,0,0.1) 0%, transparent 100%);
+            padding: 20px 30px;
+            border-bottom: 2px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,0,0,0.2);
+            border: 2px solid #ff2a2a;
+            border-radius: 50%;
+            color: #ff2a2a;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .modal-close:hover {
+                background: #ff2a2a;
+                color: white;
+                transform: rotate(90deg);
+            }
+
+        .modal-content {
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        /* Inventario Grid */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+        }
+
+        .inventory-item {
+            aspect-ratio: 1;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .inventory-item:hover {
+                border-color: var(--color-primary);
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(255,215,0,0.2);
+            }
+
+            .inventory-item .item-icon {
+                font-size: 2rem;
+                margin-bottom: 5px;
+            }
+
+            .inventory-item .item-count {
+                position: absolute;
+                bottom: 5px;
+                right: 8px;
+                background: var(--color-primary);
+                color: #000;
+                font-size: 0.75rem;
+                font-weight: bold;
+                padding: 2px 6px;
+                border-radius: 10px;
+            }
+
+            .inventory-item.legendary {
+                border-color: #ff6b35;
+                box-shadow: 0 0 15px rgba(255,107,53,0.3);
+            }
+
+        /* Árbol de habilidades */
+        .skill-tree {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .skill-branch {
+            text-align: center;
+        }
+
+        .skill-node {
+            width: 80px;
+            height: 80px;
+            background: rgba(0,0,0,0.5);
+            border: 3px solid var(--color-border);
+            border-radius: 50%;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .skill-node.unlocked {
+                border-color: var(--color-magic);
+                box-shadow: 0 0 20px rgba(0,212,255,0.4);
+            }
+
+            .skill-node:hover {
+                transform: scale(1.2);
+            }
+
+        /* ============================================
+           🎨 EFECTOS ESPECIALES
+        ============================================ */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .heal-effect {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #00ff88;
+            border-radius: 50%;
+            animation: healPulse 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes healPulse {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .level-up-banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffd700 0%, #ff6b35 100%);
+            padding: 30px 60px;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            color: #000;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255,215,0,0.5);
+            animation: levelUpPop 2s ease-out forwards;
+            z-index: 10000;
+            display: none;
+        }
+
+        @keyframes levelUpPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            20% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+
+            80% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.95);
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 250px;
+            z-index: 10000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+            .tooltip.show {
+                opacity: 1;
+            }
+
+        .tooltip-title {
+            color: var(--color-primary);
+            font-family: 'Cinzel', serif;
+            margin-bottom: 5px;
+        }
+
+        .tooltip-desc {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            #game-container {
+                grid-template-columns: 200px 1fr 250px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            #game-container {
+                grid-template-rows: 60px 1fr 150px 200px;
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "header header"
+                    "scene scene"
+                    "left-panel right-panel"
+                    "bottom-bar bottom-bar";
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🎬 PANTALLA DE INICIO -->
+    <div id="intro-screen">
+        <h1>⚔️ RPG LEGENDS ⚔️</h1>
+        <p style="color: #888; margin-top: 20px; font-size: 1.2rem;">El Despertar del Héroe</p>
+        <button class="start-btn" onclick="startGame()">INICIAR AVENTURA</button>
+    </div>
+
+    <!-- 🎮 CONTENEDOR PRINCIPAL -->
+    <div id="game-container">
+
+        <!-- 📜 HEADER -->
+        <header id="game-header">
+            <div class="game-title">⚔️ RPG LEGENDS</div>
+            <div class="level-indicator">
+                <span id="dungeon-name">Bosque Oscuro</span>
+                <div class="dungeon-badge">NIVEL <span id="level-display">1</span></div>
+            </div>
+            <div style="color: var(--color-primary);">
+                💰 <span id="gold-display">0</span> | ⭐ <span id="score-display">0</span>
+            </div>
+        </header>
+
+        <!-- 👤 PANEL IZQUIERDO -->
+        <aside id="left-panel">
+            <!-- Info del Personaje -->
+            <div class="panel-box">
+                <h3 class="panel-title">🧙‍♂️ Héroe</h3>
+                <div class="character-avatar"></div>
+
+                <!-- Barras -->
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>❤️ Vida</span>
+                        <span id="hp-text">100/100</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill hp-fill" id="hp-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>💙 Maná</span>
+                        <span id="mp-text">50/50</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill mp-fill" id="mp-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>⭐ Experiencia</span>
+                        <span id="xp-text">0/100</span>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-fill xp-fill" id="xp-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-item" title="Daño base">
+                        <div class="stat-icon">⚔️</div>
+                        <div class="stat-value" id="stat-atk">10</div>
+                        <div class="stat-name">Ataque</div>
+                    </div>
+                    <div class="stat-item" title="Reducción de daño">
+                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-value" id="stat-def">5</div>
+                        <div class="stat-name">Defensa</div>
+                    </div>
+                    <div class="stat-item" title="Poder mágico">
+                        <div class="stat-icon">✨</div>
+                        <div class="stat-value" id="stat-mag">0</div>
+                        <div class="stat-name">Magia</div>
+                    </div>
+                    <div class="stat-item" title="Probabilidad de crítico">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="stat-crit">20%</div>
+                        <div class="stat-name">Crítico</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipo -->
+            <div class="panel-box" style="flex: 1;">
+                <h3 class="panel-title">🎽 Equipamiento</h3>
+                <div id="equipment-slots" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="skill-slot" title="Arma">⚔️</div>
+                    <div class="skill-slot" title="Armadura">🛡️</div>
+                    <div class="skill-slot" title="Accesorio">💍</div>
+                    <div class="skill-slot" title="Artefacto">📿</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 🌄 ESCENARIO CENTRAL -->
+        <main id="scene-panel">
+            <div id="escenario">
+                <div id="player-sprite"></div>
+                <div id="battle-zone"></div>
+            </div>
+        </main>
+
+        <!-- ⚔️ PANEL DERECHO -->
+        <aside id="right-panel">
+            <!-- Acciones de Combate -->
+            <div class="panel-box">
+                <h3 class="panel-title">⚔️ Acciones</h3>
+                <div class="action-buttons">
+                    <button class="action-btn attack" onclick="game.combat.attack()">
+                        <span class="btn-icon">⚔️</span>
+                        <span class="btn-text">Atacar</span>
+                        <span class="btn-hotkey">[1]</span>
+                    </button>
+                    <button class="action-btn magic" onclick="game.combat.castSpell()">
+                        <span class="btn-icon">🔥</span>
+                        <span class="btn-text">Bola de Fuego</span>
+                        <span class="btn-hotkey">[2]</span>
+                    </button>
+                    <button class="action-btn heal" onclick="game.combat.heal()">
+                        <span class="btn-icon">🧪</span>
+                        <span class="btn-text">Poción de Vida</span>
+                        <span class="btn-hotkey">[3]</span>
+                    </button>
+                    <button class="action-btn item" onclick="game.combat.defend()">
+                        <span class="btn-icon">🛡️</span>
+                        <span class="btn-text">Defender</span>
+                        <span class="btn-hotkey">[4]</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Habilidades -->
+            <div class="panel-box skills-panel">
+                <h3 class="panel-title">🔮 Habilidades</h3>
+                <div class="skill-slots">
+                    <div class="skill-slot" onclick="game.skills.use(0)" title="Golpe Mortal">⚔️</div>
+                    <div class="skill-slot" onclick="game.skills.use(1)" title="Escudo Divino">🛡️</div>
+                    <div class="skill-slot" onclick="game.skills.use(2)" title="Curación Mayor">💚</div>
+                    <div class="skill-slot" onclick="game.skills.use(3)" title="Furia Berserker">😤</div>
+                </div>
+            </div>
+
+            <!-- Info del Enemigo -->
+            <div class="panel-box" style="flex: 1;">
+                <h3 class="panel-title">👹 Objetivo</h3>
+                <div id="enemy-info" style="text-align: center; color: #666; padding: 20px;">
+                    Selecciona un enemigo para ver detalles
+                </div>
+            </div>
+        </aside>
+
+        <!-- 📜 PANEL INFERIOR -->
+        <footer id="bottom-bar">
+            <!-- Log de Combate -->
+            <div class="combat-log" id="combat-log">
+                <div class="log-entry system">⚔️ Bienvenido a RPG Legends. Tu aventura comienza...</div>
+            </div>
+
+            <!-- Menú Rápido -->
+            <div class="quick-menu">
+                <button class="menu-btn" onclick="game.ui.openInventory()">
+                    <span>🎒</span> Inventario
+                </button>
+                <button class="menu-btn" onclick="game.ui.openSkills()">
+                    <span>📜</span> Habilidades
+                </button>
+                <button class="menu-btn" onclick="game.ui.openMap()">
+                    <span>🗺️</span> Mapa
+                </button>
+                <button class="menu-btn" onclick="game.save()">
+                    <span>💾</span> Guardar
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 🪟 MODALES -->
+    <!-- Inventario -->
+    <div class="modal-overlay" id="modal-inventory">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h2 class="modal-title">🎒 Inventario</h2>
+                <button class="modal-close" onclick="game.ui.closeModal('inventory')">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="inventory-grid" id="inventory-grid">
+                    <!-- Items generados dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Árbol de Habilidades -->
+    <div class="modal-overlay" id="modal-skills">
+        <div class="modal-window" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 class="modal-title">📜 Árbol de Habilidades</h2>
+                <button class="modal-close" onclick="game.ui.closeModal('skills')">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="skill-tree" id="skill-tree">
+                    <!-- Skills generadas dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mapa -->
+    <div class="modal-overlay" id="modal-map">
+        <div class="modal-window" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h2 class="modal-title">🗺️ Mapa del Mundo</h2>
+                <button class="modal-close" onclick="game.ui.closeModal('map')">×</button>
+            </div>
+            <div class="modal-content">
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px;" id="world-map">
+                    <!-- Zonas generadas dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎉 EFECTOS -->
+    <div class="level-up-banner" id="level-up-banner">
+        <div>¡SUBIDA DE NIVEL!</div>
+        <div style="font-size: 1.5rem; margin-top: 10px;">Nivel <span id="new-level">2</span></div>
+    </div>
+
+    <!-- 💬 TOOLTIP -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-title" id="tooltip-title"></div>
+        <div class="tooltip-desc" id="tooltip-desc"></div>
+    </div>
+
+    <script>
+        /* ============================================
+           🎮 RPG LEGENDS - SISTEMA PROFESIONAL
+           Arquitectura modular y escalable
+        ============================================ */
+
+        // Utilidades
+        const utils = {
+            random: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
+            clamp: (val, min, max) => Math.max(min, Math.min(max, val)),
+            delay: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+            formatNumber: (num) => num.toLocaleString('es-ES')
+        };
+
+        // Sistema de Eventos
+        class EventEmitter {
+            constructor() {
+                this.events = {};
+            }
+            on(event, callback) {
+                if (!this.events[event]) this.events[event] = [];
+                this.events[event].push(callback);
+            }
+            emit(event, data) {
+                if (this.events[event]) {
+                    this.events[event].forEach(cb => cb(data));
+                }
+            }
+        }
+
+        // Clase base para entidades
+        class Entity {
+            constructor(data) {
+                this.id = Math.random().toString(36).substr(2, 9);
+                this.name = data.name;
+                this.level = data.level || 1;
+                this.hp = data.hp || 100;
+                this.maxHp = data.maxHp || 100;
+                this.mp = data.mp || 50;
+                this.maxMp = data.maxMp || 50;
+                this.atk = data.atk || 10;
+                this.def = data.def || 5;
+                this.mag = data.mag || 0;
+                this.critChance = data.critChance || 0.2;
+                this.isDead = false;
+            }
+
+            takeDamage(amount, isCrit = false) {
+                const actualDamage = Math.max(1, Math.floor(amount - this.def * 0.5));
+                this.hp = Math.max(0, this.hp - actualDamage);
+                if (this.hp <= 0) this.isDead = true;
+                return actualDamage;
+            }
+
+            heal(amount) {
+                const actualHeal = Math.floor(amount);
+                this.hp = Math.min(this.maxHp, this.hp + actualHeal);
+                return actualHeal;
+            }
+        }
+
+        // Jugador
+        class Player extends Entity {
+            constructor() {
+                super({
+                    name: "Héroe",
+                    hp: 100,
+                    maxHp: 100,
+                    mp: 50,
+                    maxMp: 50,
+                    atk: 10,
+                    def: 5,
+                    mag: 0,
+                    critChance: 0.2
+                });
+                this.xp = 0;
+                this.maxXp = 100;
+                this.gold = 0;
+                this.score = 0;
+                this.inventory = {
+                    potion: { count: 5, icon: '🧪', name: 'Poción de Vida', desc: 'Restaura 25 HP' },
+                    sword: { count: 1, icon: '⚔️', name: 'Espada de Hierro', desc: 'ATK +5', equipped: false },
+                    armor: { count: 1, icon: '🛡️', name: 'Armadura de Cuero', desc: 'DEF +3', equipped: false }
+                };
+                this.skills = [
+                    { name: 'Golpe Mortal', icon: '⚔️', cooldown: 0, maxCooldown: 3, damage: 2.5 },
+                    { name: 'Escudo Divino', icon: '🛡️', cooldown: 0, maxCooldown: 5, effect: 'shield' },
+                    { name: 'Curación Mayor', icon: '💚', cooldown: 0, maxCooldown: 4, heal: 50 },
+                    { name: 'Furia Berserker', icon: '😤', cooldown: 0, maxCooldown: 6, effect: 'berserk' }
+                ];
+            }
+
+            gainXp(amount) {
+                this.xp += amount;
+                if (this.xp >= this.maxXp) {
+                    this.levelUp();
+                    return true;
+                }
+                return false;
+            }
+
+            levelUp() {
+                this.level++;
+                this.xp -= this.maxXp;
+                this.maxXp = Math.floor(this.maxXp * 1.2);
+                this.maxHp += 20;
+                this.hp = this.maxHp;
+                this.maxMp += 10;
+                this.mp = this.maxMp;
+                this.atk += 3;
+                this.def += 2;
+                this.mag += 1;
+                game.events.emit('levelUp', this.level);
+            }
+
+            addItem(itemId, amount = 1) {
+                if (this.inventory[itemId]) {
+                    this.inventory[itemId].count += amount;
+                }
+            }
+        }
+
+        // Enemigo
+        class Enemy extends Entity {
+            constructor(level, type = 'normal') {
+                const types = {
+                    normal: { name: 'Goblin', hpMult: 1, atkMult: 1, defMult: 1, icon: '👺' },
+                    mage: { name: 'Hechicero Oscuro', hpMult: 0.8, atkMult: 0.8, defMult: 0.6, icon: '🧙‍♂️', magMult: 2 },
+                    tank: { name: 'Gólem de Piedra', hpMult: 1.5, atkMult: 0.7, defMult: 1.3, icon: '🗿' },
+                    boss: { name: 'Señor de la Destrucción', hpMult: 3, atkMult: 1.5, defMult: 1.2, icon: '👹' }
+                };
+
+                const template = types[type];
+                const factor = 1 + (level * 0.15);
+
+                super({
+                    name: template.name,
+                    level: level,
+                    hp: Math.floor(30 * template.hpMult * factor),
+                    maxHp: Math.floor(30 * template.hpMult * factor),
+                    atk: Math.floor((5 + level * 1.2) * template.atkMult * factor),
+                    def: Math.floor((2 + level * 0.7) * template.defMult * factor),
+                    mag: Math.floor((template.magMult || 0) * level),
+                    critChance: 0.1
+                });
+
+                this.type = type;
+                this.icon = template.icon;
+                this.behavior = ['aggressive', 'defensive', 'mage'][Math.floor(Math.random() * 3)];
+            }
+
+            getLoot() {
+                const loot = [];
+                const roll = Math.random();
+
+                if (roll < 0.5) {
+                    loot.push({ id: 'potion', count: utils.random(1, 3), icon: '🧪' });
+                } else if (roll < 0.7) {
+                    loot.push({ id: 'gold', count: utils.random(10, 30) * this.level, icon: '💰' });
+                } else if (roll < 0.85) {
+                    loot.push({ id: 'sword', count: 1, icon: '⚔️', quality: 'common' });
+                } else {
+                    loot.push({ id: 'armor', count: 1, icon: '🛡️', quality: 'rare' });
+                }
+
+                return loot;
+            }
+        }
+
+        // Sistema de Combate
+        class CombatSystem {
+            constructor() {
+                this.enemies = [];
+                this.selectedEnemy = null;
+                this.turn = 0;
+                this.inCombat = false;
+            }
+
+            startEncounter(level) {
+                this.enemies = [];
+                const enemyCount = level % 5 === 0 ? 1 : utils.random(2, 4);
+                const isBoss = level % 5 === 0;
+
+                for (let i = 0; i < enemyCount; i++) {
+                    const type = isBoss ? 'boss' : (Math.random() < 0.3 ? ['mage', 'tank'][Math.floor(Math.random()*2)] : 'normal');
+                    this.enemies.push(new Enemy(level, type));
+                }
+
+                this.selectedEnemy = this.enemies[0];
+                this.inCombat = true;
+                this.renderEnemies();
+                game.log(`⚔️ ¡Combate iniciado contra ${enemyCount} enemigo(s)!`, 'system');
+            }
+
+            renderEnemies() {
+                const container = document.getElementById('battle-zone');
+                container.innerHTML = '';
+
+                this.enemies.forEach((enemy, index) => {
+                    const div = document.createElement('div');
+                    div.className = `enemy-container ${enemy === this.selectedEnemy ? 'selected' : ''}`;
+                    div.onclick = () => this.selectEnemy(index);
+
+                    div.innerHTML = `
+                        <div class="enemy-sprite" style="font-size: 4rem; filter: drop-shadow(0 0 10px ${enemy.type === 'boss' ? 'red' : 'transparent'});">
+                            ${enemy.icon}
+                        </div>
+                        <div class="enemy-hp-bar">
+                            <div class="enemy-hp-fill" style="width: ${(enemy.hp / enemy.maxHp) * 100}%"></div>
+                        </div>
+                        <div class="enemy-name">${enemy.name}</div>
+                        <div class="enemy-type">Nv. ${enemy.level} • ${enemy.behavior}</div>
+                    `;
+
+                    container.appendChild(div);
+                });
+
+                this.updateEnemyInfo();
+            }
+
+            selectEnemy(index) {
+                if (index >= this.enemies.length) return;
+                this.selectedEnemy = this.enemies[index];
+                this.renderEnemies();
+            }
+
+            updateEnemyInfo() {
+                const info = document.getElementById('enemy-info');
+                if (!this.selectedEnemy || this.selectedEnemy.isDead) {
+                    info.innerHTML = '<span style="color: #666;">Selecciona un enemigo</span>';
+                    return;
+                }
+
+                const e = this.selectedEnemy;
+                info.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 10px;">${e.icon}</div>
+                    <div style="color: var(--color-primary); font-weight: bold; font-size: 1.1rem;">${e.name}</div>
+                    <div style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">Nivel ${e.level} • ${e.behavior}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; font-size: 0.85rem;">
+                        <div>❤️ ${e.hp}/${e.maxHp}</div>
+                        <div>⚔️ ${e.atk}</div>
+                        <div>🛡️ ${e.def}</div>
+                        <div>✨ ${e.mag}</div>
+                    </div>
+                `;
+            }
+
+            async attack() {
+                if (!this.inCombat || !this.selectedEnemy || this.selectedEnemy.isDead) {
+                    game.log('Selecciona un objetivo válido', 'system');
+                    return;
+                }
+
+                // Animación de ataque
+                document.getElementById('player-sprite').classList.add('attacking');
+                setTimeout(() => document.getElementById('player-sprite').classList.remove('attacking'), 400);
+
+                await utils.delay(200);
+
+                const isCrit = Math.random() < game.player.critChance;
+                let damage = game.player.atk * (isCrit ? 2 : 1);
+                if (game.player.mag > 0) damage += game.player.mag * 0.5;
+
+                const actualDamage = this.selectedEnemy.takeDamage(damage, isCrit);
+
+                // Mostrar daño
+                this.showDamage(actualDamage, isCrit);
+
+                game.log(`${isCrit ? '💥 ¡CRÍTICO!' : '⚔️'} Atacas a ${this.selectedEnemy.name} por ${actualDamage} daño`,
+                        isCrit ? 'damage' : 'system');
+
+                // Actualizar barra de vida del enemigo
+                this.renderEnemies();
+
+                if (this.selectedEnemy.isDead) {
+                    await this.enemyDefeated(this.selectedEnemy);
+                } else {
+                    await this.enemyTurn();
+                }
+
+                game.ui.update();
+            }
+
+            showDamage(amount, isCrit) {
+                const container = document.querySelector('.enemy-container.selected') || document.getElementById('battle-zone');
+                const popup = document.createElement('div');
+                popup.className = `damage-popup ${isCrit ? 'critical-hit' : ''}`;
+                popup.textContent = amount;
+                popup.style.left = '50%';
+                popup.style.top = '20%';
+                container.appendChild(popup);
+                setTimeout(() => popup.remove(), 1000);
+            }
+
+            async enemyDefeated(enemy) {
+                game.log(`☠️ ¡${enemy.name} ha sido derrotado!`, 'damage');
+
+                const loot = enemy.getLoot();
+                loot.forEach(item => {
+                    if (item.id === 'gold') {
+                        game.player.gold += item.count;
+                    } else {
+                        game.player.addItem(item.id, item.count);
+                    }
+                    game.log(`🎁 Obtienes: ${item.icon} ${item.name || item.id} x${item.count}`, 'loot');
+                });
+
+                this.enemies = this.enemies.filter(e => e !== enemy);
+
+                if (this.enemies.length === 0) {
+                    await utils.delay(500);
+                    this.winEncounter();
+                } else {
+                    this.selectedEnemy = this.enemies[0];
+                    this.renderEnemies();
+                    game.ui.update();
+                }
+            }
+
+            async enemyTurn() {
+                await utils.delay(500);
+
+                for (const enemy of this.enemies.filter(e => !e.isDead)) {
+                    let damage = enemy.atk;
+                    if (enemy.behavior === 'aggressive') damage *= 1.3;
+                    if (enemy.behavior === 'defensive') damage *= 0.7;
+                    if (enemy.mag > 0) damage += enemy.mag;
+
+                    const actualDamage = Math.max(1, Math.floor(damage - game.player.def * 0.3));
+                    game.player.hp = Math.max(0, game.player.hp - actualDamage);
+
+                    // Efecto visual de daño al jugador
+                    document.getElementById('player-sprite').style.filter = 'brightness(2) sepia(1) hue-rotate(-50deg)';
+                    setTimeout(() => document.getElementById('player-sprite').style.filter = '', 200);
+
+                    game.log(`💔 ${enemy.name} te ataca por ${actualDamage} daño`, 'damage');
+
+                    if (game.player.hp <= 0) {
+                        this.gameOver();
+                        return;
+                    }
+                }
+
+                game.ui.update();
+            }
+
+            async castSpell() {
+                if (game.player.mp < 10) {
+                    game.log('❌ No tienes suficiente maná', 'system');
+                    return;
+                }
+
+                if (!this.selectedEnemy || this.selectedEnemy.isDead) {
+                    game.log('Selecciona un objetivo', 'system');
+                    return;
+                }
+
+                game.player.mp -= 10;
+                const damage = Math.floor(game.player.mag * 3 + 15);
+                const actualDamage = this.selectedEnemy.takeDamage(damage);
+
+                // Efecto de fuego
+                const fire = document.createElement('div');
+                fire.style.cssText = 'position: absolute; width: 100px; height: 100px; background: radial-gradient(circle, #ff6b35, transparent); border-radius: 50%; animation: healPulse 0.5s ease-out; pointer-events: none;';
+                document.querySelector('.enemy-container.selected')?.appendChild(fire);
+                setTimeout(() => fire.remove(), 500);
+
+                this.showDamage(actualDamage, false);
+                game.log(`🔥 Bola de Fuego causa ${actualDamage} daño mágico`, 'system');
+
+                this.renderEnemies();
+
+                if (this.selectedEnemy.isDead) {
+                    await this.enemyDefeated(this.selectedEnemy);
+                } else {
+                    await this.enemyTurn();
+                }
+
+                game.ui.update();
+            }
+
+            heal() {
+                if (game.player.inventory.potion.count <= 0) {
+                    game.log('❌ No tienes pociones', 'system');
+                    return;
+                }
+
+                const healAmount = game.player.heal(25);
+                game.player.inventory.potion.count--;
+
+                // Efecto visual
+                const effect = document.createElement('div');
+                effect.className = 'heal-effect';
+                document.getElementById('player-sprite').appendChild(effect);
+                setTimeout(() => effect.remove(), 1000);
+
+                game.log(`💚 Poción usada. Recuperas ${healAmount} HP`, 'heal');
+                game.ui.update();
+            }
+
+            defend() {
+                game.player.def += 10;
+                game.log('🛡️ Defensa aumentada temporalmente', 'system');
+                setTimeout(() => {
+                    game.player.def -= 10;
+                    game.ui.update();
+                }, 3000);
+                this.enemyTurn();
+            }
+
+            winEncounter() {
+                this.inCombat = false;
+                const xpGain = 20 * game.dungeon.level;
+                const leveled = game.player.gainXp(xpGain);
+
+                game.log(`✨ Victoria! Ganas ${xpGain} XP`, 'system');
+
+                if (leveled) {
+                    document.getElementById('new-level').textContent = game.player.level;
+                    const banner = document.getElementById('level-up-banner');
+                    banner.style.display = 'block';
+                    setTimeout(() => banner.style.display = 'none', 2000);
+                }
+
+                setTimeout(() => {
+                    game.dungeon.nextLevel();
+                }, 1500);
+            }
+
+            gameOver() {
+                this.inCombat = false;
+                game.log('💀 HAS MUERTO. Recarga para reintentar.', 'damage');
+                document.querySelectorAll('.action-btn').forEach(btn => btn.disabled = true);
+            }
+        }
+
+        // Sistema de Habilidades
+        class SkillSystem {
+            use(index) {
+                const skill = game.player.skills[index];
+                if (!skill || skill.cooldown > 0) {
+                    game.log('Habilidad en enfriamiento', 'system');
+                    return;
+                }
+
+                skill.cooldown = skill.maxCooldown;
+                game.combat[skill.effect || 'attack']();
+                game.ui.updateSkills();
+            }
+
+            updateCooldowns() {
+                game.player.skills.forEach(skill => {
+                    if (skill.cooldown > 0) skill.cooldown--;
+                });
+            }
+        }
+
+        // Sistema de Mazmorras
+        class DungeonSystem {
+            constructor() {
+                this.level = 1;
+                this.areas = [
+                    { name: 'Bosque Oscuro', bg: 'img/escenario1.jpeg', minLvl: 1 },
+                    { name: 'Cavernas Heladas', bg: 'img/escenario2.jpeg', minLvl: 5 },
+                    { name: 'Castillo Maldito', bg: 'img/escenario3.jpeg', minLvl: 10 },
+                    { name: 'Infierno Ardiente', bg: 'img/escenario4.jpeg', minLvl: 15 },
+                    { name: 'Torre Celestial', bg: 'img/escenario5.jpeg', minLvl: 20 }
+                ];
+            }
+
+            getCurrentArea() {
+                return this.areas.findLast(a => a.minLvl <= this.level) || this.areas[0];
+            }
+
+            nextLevel() {
+                this.level++;
+                const area = this.getCurrentArea();
+
+                document.getElementById('dungeon-name').textContent = area.name;
+                document.getElementById('level-display').textContent = this.level;
+
+                // Cambiar fondo
+                const escenario = document.getElementById('escenario');
+                escenario.style.backgroundImage = `url('${area.bg}')`;
+
+                game.log(`🚪 Entrando a ${area.name} - Nivel ${this.level}`, 'system');
+
+                setTimeout(() => {
+                    game.combat.startEncounter(this.level);
+                }, 1000);
+            }
+        }
+
+        // Sistema de UI
+        class UISystem {
+            update() {
+                const p = game.player;
+
+                // Barras
+                document.getElementById('hp-bar').style.width = `${(p.hp / p.maxHp) * 100}%`;
+                document.getElementById('hp-text').textContent = `${Math.floor(p.hp)}/${p.maxHp}`;
+
+                document.getElementById('mp-bar').style.width = `${(p.mp / p.maxMp) * 100}%`;
+                document.getElementById('mp-text').textContent = `${Math.floor(p.mp)}/${p.maxMp}`;
+
+                document.getElementById('xp-bar').style.width = `${(p.xp / p.maxXp) * 100}%`;
+                document.getElementById('xp-text').textContent = `${p.xp}/${p.maxXp}`;
+
+                // Stats
+                document.getElementById('stat-atk').textContent = p.atk;
+                document.getElementById('stat-def').textContent = p.def;
+                document.getElementById('stat-mag').textContent = p.mag;
+                document.getElementById('stat-crit').textContent = `${Math.floor(p.critChance * 100)}%`;
+
+                // Recursos
+                document.getElementById('gold-display').textContent = utils.formatNumber(p.gold);
+                document.getElementById('score-display').textContent = utils.formatNumber(p.score);
+
+                // Inventario
+                this.updateInventory();
+            }
+
+            updateInventory() {
+                const grid = document.getElementById('inventory-grid');
+                grid.innerHTML = '';
+
+                Object.entries(game.player.inventory).forEach(([id, item]) => {
+                    if (item.count <= 0) return;
+
+                    const div = document.createElement('div');
+                    div.className = `inventory-item ${item.quality || ''}`;
+                    div.innerHTML = `
+                        <div class="item-icon">${item.icon}</div>
+                        <div style="font-size: 0.75rem; text-align: center;">${item.name}</div>
+                        <div class="item-count">${item.count}</div>
+                    `;
+
+                    div.onclick = () => this.useItem(id);
+                    this.addTooltip(div, item.name, item.desc);
+
+                    grid.appendChild(div);
+                });
+            }
+
+            updateSkills() {
+                const slots = document.querySelectorAll('.skill-slots .skill-slot');
+                game.player.skills.forEach((skill, i) => {
+                    const cd = skill.cooldown;
+                    slots[i].style.opacity = cd > 0 ? '0.5' : '1';
+                    slots[i].innerHTML = skill.icon + (cd > 0 ? `<div class="cooldown" style="height: ${(cd/skill.maxCooldown)*100}%"></div>` : '');
+                });
+            }
+
+            useItem(itemId) {
+                const item = game.player.inventory[itemId];
+                if (!item || item.count <= 0) return;
+
+                if (itemId === 'potion') {
+                    game.combat.heal();
+                } else if (itemId === 'sword' && !item.equipped) {
+                    game.player.atk += 5;
+                    item.equipped = true;
+                    game.log('⚔️ Espada equipada', 'system');
+                } else if (itemId === 'armor' && !item.equipped) {
+                    game.player.def += 3;
+                    item.equipped = true;
+                    game.log('🛡️ Armadura equipada', 'system');
+                }
+
+                this.update();
+            }
+
+            openInventory() {
+                document.getElementById('modal-inventory').classList.add('active');
+            }
+
+            openSkills() {
+                document.getElementById('modal-skills').classList.add('active');
+                this.renderSkillTree();
+            }
+
+            openMap() {
+                document.getElementById('modal-map').classList.add('active');
+                this.renderMap();
+            }
+
+            closeModal(type) {
+                document.getElementById(`modal-${type}`).classList.remove('active');
+            }
+
+            renderSkillTree() {
+                const tree = document.getElementById('skill-tree');
+                tree.innerHTML = '';
+
+                const branches = ['Guerrero', 'Mago', 'Arquero'];
+                branches.forEach(branch => {
+                    const div = document.createElement('div');
+                    div.className = 'skill-branch';
+                    div.innerHTML = `
+                        <h4 style="color: var(--color-primary); margin-bottom: 10px;">${branch}</h4>
+                        <div class="skill-node unlocked">⚔️</div>
+                        <div class="skill-node">🛡️</div>
+                        <div class="skill-node">⚡</div>
+                    `;
+                    tree.appendChild(div);
+                });
+            }
+
+            renderMap() {
+                const map = document.getElementById('world-map');
+                map.innerHTML = '';
+
+                game.dungeon.areas.forEach((area, i) => {
+                    const div = document.createElement('div');
+                    const unlocked = area.minLvl <= game.dungeon.level;
+                    div.style.cssText = `
+                        aspect-ratio: 1;
+                        background: ${unlocked ? 'linear-gradient(135deg, #2a2a3a, #1a1a2e)' : '#111'};
+                        border: 2px solid ${unlocked ? 'var(--color-primary)' : '#333'};
+                        border-radius: 15px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        opacity: ${unlocked ? 1 : 0.5};
+                        cursor: ${unlocked ? 'pointer' : 'not-allowed'};
+                    `;
+                    div.innerHTML = `
+                        <div style="font-size: 2rem;">${unlocked ? '🏰' : '🔒'}</div>
+                        <div style="font-size: 0.8rem; text-align: center; padding: 5px;">${area.name}</div>
+                    `;
+                    map.appendChild(div);
+                });
+            }
+
+            addTooltip(element, title, desc) {
+                const tooltip = document.getElementById('tooltip');
+                element.addEventListener('mouseenter', (e) => {
+                    document.getElementById('tooltip-title').textContent = title;
+                    document.getElementById('tooltip-desc').textContent = desc;
+                    tooltip.classList.add('show');
+                });
+                element.addEventListener('mousemove', (e) => {
+                    tooltip.style.left = e.pageX + 15 + 'px';
+                    tooltip.style.top = e.pageY + 15 + 'px';
+                });
+                element.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('show');
+                });
+            }
+        }
+
+        // Game Engine Principal
+        class Game {
+            constructor() {
+                this.events = new EventEmitter();
+                this.player = new Player();
+                this.combat = new CombatSystem();
+                this.skills = new SkillSystem();
+                this.dungeon = new DungeonSystem();
+                this.ui = new UISystem();
+
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Teclas rápidas
+                document.addEventListener('keydown', (e) => {
+                    if (!this.combat.inCombat) return;
+
+                    switch(e.key) {
+                        case '1': this.combat.attack(); break;
+                        case '2': this.combat.castSpell(); break;
+                        case '3': this.combat.heal(); break;
+                        case '4': this.combat.defend(); break;
+                        case 'i': this.ui.openInventory(); break;
+                        case 's': this.ui.openSkills(); break;
+                        case 'm': this.ui.openMap(); break;
+                    }
+                });
+
+                // Eventos personalizados
+                this.events.on('levelUp', (level) => {
+                    this.log(`🎉 ¡Nivel ${level} alcanzado! Stats aumentados.`, 'system');
+                });
+            }
+
+            log(message, type = 'system') {
+                const log = document.getElementById('combat-log');
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+
+                // Limitar entradas
+                while (log.children.length > 50) {
+                    log.removeChild(log.firstChild);
+                }
+            }
+
+            save() {
+                const data = {
+                    player: this.player,
+                    dungeon: { level: this.dungeon.level }
+                };
+                localStorage.setItem('rpg_legends_save', JSON.stringify(data));
+                this.log('💾 Partida guardada', 'system');
+            }
+
+            load() {
+                const saved = localStorage.getItem('rpg_legends_save');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    Object.assign(this.player, data.player);
+                    this.dungeon.level = data.dungeon.level;
+                    this.log('📂 Partida cargada', 'system');
+                }
+            }
+
+            start() {
+                document.getElementById('intro-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('intro-screen').style.display = 'none';
+                    document.getElementById('game-container').style.display = 'grid';
+
+                    // Inicializar escenario
+                    const area = this.dungeon.getCurrentArea();
+                    document.getElementById('escenario').style.backgroundImage = `url('${area.bg}')`;
+
+                    this.ui.update();
+                    this.combat.startEncounter(1);
+                }, 1000);
+            }
+        }
+
+        // Inicializar juego
+        const game = new Game();
+
+        function startGame() {
+            game.start();
+        }
+
+        // Exponer para debug
+        window.game = game;
+    </script>
+</body>
+</html>
