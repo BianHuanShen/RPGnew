@@ -1,0 +1,330 @@
+﻿/* ======================================= */
+/* JUGADOR - VERSIÓN IMPONENTE v3.0       */
+/* ======================================= */
+#jugador {
+    width: 64px;
+    height: 64px;
+    background: url('../img/jugador.png') no-repeat center;
+    background-size: contain;
+    position: absolute;
+    z-index: 10;
+    cursor: grab;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    filter: drop-shadow(0 0 10px #3498db);
+    animation: auraJugador 2s ease-in-out infinite;
+}
+
+#jugador:active {
+    cursor: grabbing;
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 20px #3498db) brightness(1.3);
+}
+
+/* Estados del jugador según vida */
+#jugador[data-vida="alta"] {
+    filter: drop-shadow(0 0 15px #2ecc71) brightness(1.1);
+    animation: auraJugadorSaludable 2s ease-in-out infinite;
+}
+
+#jugador[data-vida="media"] {
+    filter: drop-shadow(0 0 12px #f1c40f);
+    animation: auraJugador 2s ease-in-out infinite;
+}
+
+#jugador[data-vida="baja"] {
+    filter: drop-shadow(0 0 20px #e74c3c) brightness(0.9);
+    animation: pulsoPeligro 0.8s ease-in-out infinite;
+}
+
+#jugador[data-vida="critica"] {
+    filter: drop-shadow(0 0 25px #c0392b) sepia(0.3);
+    animation: pulsoCritico 0.5s ease-in-out infinite;
+}
+
+/* Animaciones del jugador */
+@keyframes auraJugador {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px #3498db) brightness(1);
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 16px #3498db) brightness(1.2);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes auraJugadorSaludable {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px #2ecc71);
+        transform: translateY(0);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px #2ecc71);
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes pulsoPeligro {
+    0%, 100% {
+        filter: drop-shadow(0 0 15px #e74c3c);
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 25px #e74c3c) brightness(1.1);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes pulsoCritico {
+    0%, 100% {
+        filter: drop-shadow(0 0 20px #c0392b) sepia(0.3);
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 30px #e74c3c) sepia(0.5) brightness(1.2);
+        transform: scale(1.08);
+    }
+}
+
+/* Efecto al atacar */
+#jugador.atacando {
+    animation: ataqueEpico 0.3s ease-out !important;
+}
+
+@keyframes ataqueEpico {
+    0% { transform: scale(1) rotate(0deg); }
+    30% { transform: scale(1.3) rotate(-10deg); filter: drop-shadow(0 0 30px #f1c40f); }
+    60% { transform: scale(1.2) rotate(10deg); filter: drop-shadow(0 0 40px #fff); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Efecto al recibir daño */
+#jugador.danado {
+    animation: danioRecibido 0.4s ease-out !important;
+}
+
+@keyframes danioRecibido {
+    0%, 100% { filter: drop-shadow(0 0 10px currentColor); transform: translateX(0); }
+    20% { filter: drop-shadow(0 0 25px #e74c3c) brightness(2) sepia(1) hue-rotate(-50deg); transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+/* Efecto de curación */
+#jugador.curandose {
+    animation: curacionAura 1s ease-out;
+}
+
+@keyframes curacionAura {
+    0% { filter: drop-shadow(0 0 10px currentColor); }
+    50% { filter: drop-shadow(0 0 40px #2ecc71) brightness(1.5); transform: scale(1.1); }
+    100% { filter: drop-shadow(0 0 10px currentColor); transform: scale(1); }
+}
+
+/* Niveles épicos */
+#jugador[data-nivel="bajo"] {
+    border: 2px solid #95a5a6;
+}
+
+#jugador[data-nivel="medio"] {
+    border: 3px solid #f1c40f;
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+}
+
+#jugador[data-nivel="alto"] {
+    border: 3px solid #e67e22;
+    box-shadow: 0 0 30px rgba(230, 126, 34, 0.5);
+    animation: auraCampeon 2s ease-in-out infinite;
+}
+
+#jugador[data-nivel="legendario"] {
+    border: 4px solid;
+    border-image: linear-gradient(45deg, #f1c40f, #e67e22, #9b59b6, #3498db) 1;
+    box-shadow: 0 0 40px rgba(155, 89, 182, 0.6);
+    animation: auraLegendaria 1.5s ease-in-out infinite;
+}
+
+@keyframes auraCampeon {
+    0%, 100% { box-shadow: 0 0 20px rgba(230, 126, 34, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(230, 126, 34, 0.8), 0 0 60px rgba(241, 196, 15, 0.4); }
+}
+
+@keyframes auraLegendaria {
+    0% { box-shadow: 0 0 30px rgba(155, 89, 182, 0.6); filter: drop-shadow(0 0 15px #9b59b6) hue-rotate(0deg); }
+    25% { box-shadow: 0 0 50px rgba(52, 152, 219, 0.8); filter: drop-shadow(0 0 20px #3498db) hue-rotate(90deg); }
+    50% { box-shadow: 0 0 70px rgba(241, 196, 15, 1); filter: drop-shadow(0 0 25px #f1c40f) hue-rotate(180deg); }
+    75% { box-shadow: 0 0 50px rgba(230, 126, 34, 0.8); filter: drop-shadow(0 0 20px #e67e22) hue-rotate(270deg); }
+    100% { box-shadow: 0 0 30px rgba(155, 89, 182, 0.6); filter: drop-shadow(0 0 15px #9b59b6) hue-rotate(360deg); }
+}
+
+/* Partículas de poder */
+#jugador::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 40%, currentColor 70%, transparent 100%);
+    opacity: 0;
+    z-index: -1;
+    animation: particulasPoder 3s ease-in-out infinite;
+}
+
+#jugador[data-nivel="legendario"]::before {
+    opacity: 0.3;
+}
+
+@keyframes particulasPoder {
+    0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 0.3; }
+}
+
+/* ======================================= */
+/* ENEMIGOS                               */
+/* ======================================= */
+.enemigo {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 5;
+    transition: transform 0.1s;
+}
+
+/* Enemigos por clase */
+.enemigo[data-clase="mago"] {
+    filter: drop-shadow(0 0 8px #9b59b6);
+    animation: flotarMago 2s ease-in-out infinite;
+}
+
+.enemigo[data-clase="guerrero"] {
+    filter: drop-shadow(0 0 8px #e74c3c);
+    animation: temblarGuerrero 0.5s ease-in-out infinite;
+}
+
+.enemigo[data-clase="arquero"] {
+    filter: drop-shadow(0 0 8px #27ae60);
+    animation: apuntarArquero 1s ease-in-out infinite;
+}
+
+.enemigo[data-clase="esqueleto"] {
+    filter: drop-shadow(0 0 8px #95a5a6) brightness(0.9);
+    animation: huesos 1.5s ease-in-out infinite;
+}
+
+@keyframes flotarMago {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes temblarGuerrero {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+@keyframes apuntarArquero {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05) translateX(5px); }
+}
+
+@keyframes huesos {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+    75% { transform: rotate(1deg); }
+}
+
+/* Jefes */
+.enemigo.jefe {
+    animation: auraJefe 1s ease-in-out infinite !important;
+}
+
+@keyframes auraJefe {
+    0%, 100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 20px currentColor); }
+    50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 40px currentColor); }
+}
+
+/* ======================================= */
+/* BARRAS DE VIDA                          */
+/* ======================================= */
+.barra-vida {
+    width: 100%;
+    height: 22px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #999;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: inset 0 0 12px #000, 0 0 6px #000;
+}
+
+#vidaJugadorFill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    border-radius: 6px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.barra-vida-enemigo {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.barra-vida-enemigo-fill {
+    width: 100%;
+    height: 100%;
+    background: limegreen;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.barra-vida-enemigo-fill.jefe {
+    background: #e74c3c;
+}
+
+/* Animaciones base */
+.animado {
+    animation: idle 1s ease-in-out infinite;
+}
+
+@keyframes idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@keyframes caminar {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(5px); }
+    50% { transform: translateX(0); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.enemigo.jefe {
+    animation: caminar 0.8s steps(4) infinite;
+    box-shadow: 0 0 30px red;
+}
+
+/* Filtros por IA */
+.enemigo[data-ia="agresivo"] {
+    filter: hue-rotate(0deg);
+}
+
+.enemigo[data-ia="defensivo"] {
+    filter: hue-rotate(90deg);
+}
+
+.enemigo[data-ia="mago"] {
+    filter: hue-rotate(250deg);
+}

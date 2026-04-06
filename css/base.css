@@ -1,0 +1,211 @@
+﻿/* ======================================= */
+/* RESET + BASE                            */
+/* ======================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.2s ease-in-out;
+}
+
+body {
+    background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h1 {
+    margin: 20px 0;
+    font-size: 2.2rem;
+    text-align: center;
+    text-shadow: 0 0 10px #000, 0 0 20px #000;
+}
+
+/* ======================================= */
+/* LAYOUT PRINCIPAL                        */
+/* ======================================= */
+.game-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    width: 95%;
+    max-width: 1400px;
+    flex-wrap: wrap;
+}
+
+/* LATERALES */
+#acciones,
+#infoJugador {
+    width: 260px;
+    flex-shrink: 0;
+}
+
+/* ======================================= */
+/* ESCENARIO                               */
+/* ======================================= */
+#escenario {
+    flex: 1;
+    min-width: 300px;
+    height: 450px;
+    background: url('../img/fondo.jpg') no-repeat center center;
+    background-size: cover;
+    border: 3px solid #aaa;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 40px #000, 0 0 20px #000;
+}
+
+#gameArea {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* ======================================= */
+/* UI CAJAS                                */
+/* ======================================= */
+.caja {
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #888;
+    border-radius: 12px;
+    padding: 15px;
+    min-width: 220px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.9);
+    backdrop-filter: blur(4px);
+}
+
+    .caja h2 {
+        margin-bottom: 12px;
+        font-size: 1.4rem;
+        color: #f1c40f;
+        text-align: center;
+        text-shadow: 0 0 6px #000;
+    }
+
+    /* ======================================= */
+    /* BOTONES PRO                             */
+    /* ======================================= */
+    .caja button {
+        width: 100%;
+        margin: 6px 0;
+        padding: 12px;
+        background: linear-gradient(135deg, #2ecc71, #1e8449);
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 8px #000;
+    }
+
+        .caja button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px #2ecc71;
+        }
+
+        .caja button:disabled {
+            background: #444;
+            cursor: not-allowed;
+        }
+
+/* ======================================= */
+/* SCROLL ACCIONES                         */
+/* ======================================= */
+#acciones {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* ======================================= */
+/* MENSAJE                                 */
+/* ======================================= */
+.mensaje {
+    width: 90%;
+    max-width: 1200px;
+    margin-top: 20px;
+    padding: 12px;
+    background: rgba(0,0,0,0.9);
+    border: 2px solid #777;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 15px #000;
+    white-space: pre-line;
+}
+
+/* ======================================= */
+/* INVENTARIO                              */
+/* ======================================= */
+.ventana {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.ventana-contenido {
+    background: #1a1a1a;
+    margin: 8% auto;
+    padding: 20px;
+    border: 2px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+}
+
+.cerrar {
+    float: right;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* ======================================= */
+/* MODAL GAME OVER                         */
+/* ======================================= */
+#modalGameOver {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    z-index: 1000;
+}
+
+    #modalGameOver p {
+        margin: 10px 0;
+        text-shadow: 0 0 10px #000;
+    }
+
+#reiniciarBtn {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: #fff;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    transition: transform 0.2s;
+}
+
+    #reiniciarBtn:hover {
+        transform: scale(1.05);
+    }

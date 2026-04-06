@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senda Épica</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/pj.css">
+    <link rel="stylesheet" href="css/barrammorpg.css">
+    <link rel="stylesheet" href="css/respo.css">
+</head>
+<body>
+
+    <center><h1>Senda Épica</h1></center>
+
+    <div class="game-layout">
+
+        <!-- ACCIONES -->
+        <div id="acciones" class="caja">
+            <h2>🎮 Acciones</h2>
+
+            <button id="atacarBtn">⚔️ Atacar</button>
+            <button id="curarBtn">🧪 Curar</button>
+            <button id="equiparArmaBtn">⚔️ Equipar Espada</button>
+            <button id="equiparEspadaLegendariaBtn">⚔️ Espada Legendaria</button>
+            <button id="equiparArmaduraBtn">🛡️ Equipar Armadura</button>
+            <button id="equiparArmaduraEpicaBtn">🛡️ Armadura Épica</button>
+            <button id="usarCristalBtn">💎 Usar Cristal</button>
+            <button id="usarOrbeBtn">🔮 Usar Orbe</button>
+            <button id="aprenderMagiaBtn">✨ Aprender Magia</button>
+            <button id="abrirInventarioBtn">🎒 Inventario</button>
+        </div>
+
+        <!-- ESCENARIO -->
+        <div id="escenario">
+            <div id="gameArea"></div>
+        </div>
+
+        <!-- INFO JUGADOR -->
+        <div id="infoJugador" class="caja">
+            <h2>🧙 Jugador</h2>
+
+            <div class="barra-vida">
+                <div id="vidaJugadorFill"></div>
+            </div>
+
+            <p>⚔️ Ataque: <span id="ataqueJugador">10</span></p>
+            <p>🛡️ Defensa: <span id="defensaJugador">5</span></p>
+            <p>✨ Magia: <span id="magiaJugador">0</span></p>
+            <p>📈 Nivel: <span id="nivelJugador">1</span></p>
+            <p>🏆 Puntaje: <span id="puntaje">0</span></p>
+        </div>
+
+    </div>
+
+    <!-- INVENTARIO MODAL -->
+    <div id="ventanaInventario" class="ventana">
+        <div class="ventana-contenido">
+            <span id="cerrarInventario" class="cerrar">&times;</span>
+            <h2>🎒 Inventario</h2>
+            <ul id="listaInventario"></ul>
+        </div>
+    </div>
+
+    <!-- BARRA MMORPG -->
+    <div id="barraRPG">
+        <div class="hud-bar">
+            <div class="hud-label">❤️ Vida</div>
+            <div class="hud-fill vida" id="vidaBarra"></div>
+        </div>
+        <div class="hud-bar">
+            <div class="hud-label">🔮 Magia</div>
+            <div class="hud-fill magia" id="magiaBarra"></div>
+        </div>
+        <div class="skills">
+            <button id="skill1">⚔️</button>
+            <button id="skill2">🔥</button>
+            <button id="skill3">❄️</button>
+            <button id="skill4">💀</button>
+        </div>
+    </div>
+
+    <p id="mensaje" class="mensaje"></p>
+
+    <!-- JS - ORDEN CRÍTICO: primero definiciones, lógica, luego render -->
+    <script src="js/main.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/items.js"></script>
+    <script src="js/darloot.js"></script>
+    <script src="js/reinicio.js"></script>
+    <script src="js/esce.js"></script>
+
+</body>
+</html>
