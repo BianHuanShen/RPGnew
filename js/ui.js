@@ -46,11 +46,14 @@ function actualizarUI() {
     }
 
     // Mostrar/ocultar botones de items raros
+    if (curarBtn) curarBtn.style.display = jugador.inventario.pocion > 0 ? "block" : "none";
     if (usarCristalBtn) usarCristalBtn.style.display = jugador.inventario.cristal > 0 ? "block" : "none";
     if (usarOrbeBtn) usarOrbeBtn.style.display = jugador.inventario.orbe > 0 ? "block" : "none";
+    if (equiparArmaBtn) equiparArmaBtn.style.display = jugador.inventario.espada > 0 ? "block" : "none";
     if (equiparEspadaLegendariaBtn) equiparEspadaLegendariaBtn.style.display = jugador.inventario.espadaLegendaria > 0 ? "block" : "none";
+    if (equiparArmaduraBtn) equiparArmaduraBtn.style.display = jugador.inventario.armadura > 0 ? "block" : "none";
     if (equiparArmaduraEpicaBtn) equiparArmaduraEpicaBtn.style.display = jugador.inventario.armaduraEpica > 0 ? "block" : "none";
-
+    
     // Actualizar barra MMORPG
     actualizarBarraMMORPG(porcentajeVida, maxMagia);
 }
