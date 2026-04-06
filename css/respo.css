@@ -1,59 +1,91 @@
-﻿/* ======================================= */
-/* RESPONSIVE PRO                          */
+/* ======================================= */
+/* RESPONSIVE COMPLETO                     */
 /* ======================================= */
 
-/* TABLET */
-@media (max-width: 1024px) {
+/* ------------------------------- */
+/* MÓVIL PEQUEÑO: hasta 480px     */
+/* ------------------------------- */
+@media screen and (max-width: 480px) {
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
     .game-layout {
         flex-direction: column;
-        align-items: center;
+        gap: 10px;
+    }
+
+    #acciones,
+    #infoJugador {
+        width: 95%;
+    }
+
+    #escenario {
+        width: 100%;
+        height: 250px;
+    }
+
+    .caja {
+        min-width: 95%;
+        padding: 8px;
+    }
+
+    #barraRPG {
+        width: 95%;
+        padding: 8px;
+    }
+
+    .skills button {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    .mensaje {
+        width: 95%;
+        font-size: 0.85rem;
+    }
+
+    .ventana-contenido {
+        width: 95%;
+        margin: 12% auto;
+        padding: 12px;
+    }
+
+    #jugador {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ------------------------------- */
+/* MÓVIL GRANDE: 481px a 600px    */
+/* ------------------------------- */
+@media screen and (min-width: 481px) and (max-width: 600px) {
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .game-layout {
+        flex-direction: column;
+        gap: 15px;
     }
 
     #acciones,
     #infoJugador {
         width: 90%;
-        max-width: 500px;
     }
 
     #escenario {
         width: 100%;
-        height: 350px;
-        order: -1;
-    }
-
-    #barraRPG {
-        position: relative;
-        bottom: auto;
-        left: auto;
-        transform: none;
-        margin-top: 20px;
-        width: 95%;
-    }
-}
-
-/* CELULAR */
-@media (max-width: 600px) {
-    h1 {
-        font-size: 1.8rem;
-    }
-
-    #escenario {
-        height: 280px;
+        height: 300px;
     }
 
     .caja {
-        width: 100%;
+        min-width: 90%;
         padding: 10px;
-    }
-
-        .caja h2 {
-            font-size: 1.2rem;
-        }
-
-    #jugador,
-    .enemigo {
-        width: 45px;
-        height: 45px;
     }
 
     .skills button {
@@ -62,19 +94,229 @@
         font-size: 18px;
     }
 
-    .hud-label {
-        font-size: 10px;
+    .mensaje {
+        width: 95%;
+        font-size: 0.9rem;
+    }
+
+    #jugador {
+        width: 48px;
+        height: 48px;
     }
 }
 
-/* MUY PEQUEÑO */
-@media (max-width: 400px) {
-    #escenario {
-        height: 220px;
+/* ------------------------------- */
+/* TABLET PEQUEÑA: 601px a 768px  */
+/* ------------------------------- */
+@media screen and (min-width: 601px) and (max-width: 768px) {
+
+    h1 {
+        font-size: 1.9rem;
     }
 
-    .caja button {
-        padding: 10px;
-        font-size: 14px;
+    .game-layout {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    #acciones,
+    #infoJugador {
+        width: 200px;
+    }
+
+    #escenario {
+        width: 70%;
+        height: 350px;
+    }
+
+    .caja {
+        min-width: 220px;
+        padding: 12px;
+    }
+
+    .skills button {
+        width: 42px;
+        height: 42px;
+        font-size: 19px;
+    }
+
+    .mensaje {
+        width: 90%;
+        font-size: 0.95rem;
+    }
+
+    #jugador {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+/* ------------------------------- */
+/* TABLET GRANDE / MINI LAPTOP: 769px a 1024px */
+/* ------------------------------- */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .game-layout {
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    #acciones,
+    #infoJugador {
+        width: 220px;
+    }
+
+    #escenario {
+        width: 65%;
+        height: 400px;
+    }
+
+    .caja {
+        min-width: 240px;
+        padding: 14px;
+    }
+
+    .skills button {
+        width: 44px;
+        height: 44px;
+        font-size: 19px;
+    }
+
+    .mensaje {
+        width: 90%;
+        font-size: 1rem;
+    }
+
+    #jugador {
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* ------------------------------- */
+/* LAPTOP / DESKTOP: 1025px a 1440px */
+/* ------------------------------- */
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .game-layout {
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    #acciones,
+    #infoJugador {
+        width: 260px;
+    }
+
+    #escenario {
+        width: 65%;
+        height: 450px;
+    }
+
+    .caja {
+        min-width: 220px;
+        padding: 15px;
+    }
+
+    .skills button {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+    .mensaje {
+        width: 90%;
+        max-width: 1200px;
+        font-size: 1rem;
+    }
+
+    #jugador {
+        width: 64px;
+        height: 64px;
+    }
+}
+
+/* ------------------------------- */
+/* DESKTOP GRANDE: 1441px a 1920px */
+/* ------------------------------- */
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+
+    h1 {
+        font-size: 2.4rem;
+    }
+
+    #escenario {
+        width: 60%;
+        height: 500px;
+    }
+
+    #acciones,
+    #infoJugador {
+        width: 280px;
+    }
+
+    .caja {
+        min-width: 240px;
+        padding: 16px;
+    }
+
+    .skills button {
+        width: 48px;
+        height: 48px;
+        font-size: 21px;
+    }
+
+    #jugador {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* ------------------------------- */
+/* ULTRA HD / 4K: mayor a 1920px   */
+/* ------------------------------- */
+@media screen and (min-width: 1921px) {
+
+    h1 {
+        font-size: 2.6rem;
+    }
+
+    #escenario {
+        width: 55%;
+        height: 600px;
+    }
+
+    #acciones,
+    #infoJugador {
+        width: 320px;
+    }
+
+    .caja {
+        min-width: 260px;
+        padding: 18px;
+    }
+
+    .skills button {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+    }
+
+    #jugador {
+        width: 80px;
+        height: 80px;
     }
 }
