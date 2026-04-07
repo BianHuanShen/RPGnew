@@ -1,23 +1,60 @@
 // ===============================
-// REINICIO SYSTEM
+// REINICIO SYSTEM (FIXED)
 // ===============================
 
-// Crear modal de juego terminado
+// ===== CONTROL DE LOOPS =====
+let gameLoopActivo = false;
+let intervaloAtaque = null;
+
+function iniciarLoops() {
+    if (gameLoopActivo) return;
+
+    gameLoopActivo = true;
+
+    function loopMovimiento() {
+        if (!juegoActivo) return;
+        moverEnemigos();
+        requestAnimationFrame(loopMovimiento);
+    }
+
+    loopMovimiento();
+
+    intervaloAtaque = setInterval(() => {
+        if (juegoActivo) ataqueEnemigos();
+    }, 800);
+}
+
+function detenerLoops() {
+    gameLoopActivo = false;
+
+    if (intervaloAtaque) {
+        clearInterval(intervaloAtaque);
+        intervaloAtaque = null;
+    }
+}
+
+// ===== MODAL GAME OVER =====
 const modalGameOver = document.createElement("div");
 modalGameOver.id = "modalGameOver";
+modalGameOver.style.display = "none";
+
 modalGameOver.innerHTML = `
     <p>💀 Has muerto</p>
     <p>Puntaje final: <span id="puntajeFinal">0</span></p>
     <p>¿Deseas volver a jugar?</p>
     <button id="reiniciarBtn">Comenzar de nuevo</button>
 `;
+
 document.body.appendChild(modalGameOver);
 
 const reiniciarBtn = document.getElementById("reiniciarBtn");
 const puntajeFinalEl = document.getElementById("puntajeFinal");
 
-// Función para reiniciar el juego
+// ===== REINICIAR JUEGO (FIXED) =====
 function reiniciarJuego() {
+    // 🛑 DETENER LOOPS
+    detenerLoops();
+
     // Reset jugador
     jugador.vida = 100;
     jugador.vidaMax = 100;
@@ -26,6 +63,7 @@ function reiniciarJuego() {
     jugador.magia = 0;
     jugador.nivel = 1;
     jugador.puntaje = 0;
+
     jugador.inventario = {
         pocion: 30,
         espada: 1,
@@ -38,13 +76,17 @@ function reiniciarJuego() {
         armaduraEpica: 0
     };
 
-    // Reset nivel
+    // Reset estado global
     nivelActual = 1;
     juegoActivo = true;
-
-    // Limpiar enemigos
     enemigos = [];
+
+    // Limpiar enemigos del DOM
     gameArea.querySelectorAll(".enemigo").forEach(e => e.remove());
+
+    // Reset posición jugador (IMPORTANTE)
+    jugadorDiv.style.left = "100px";
+    jugadorDiv.style.top = "300px";
 
     // Ocultar modal
     modalGameOver.style.display = "none";
@@ -52,29 +94,44 @@ function reiniciarJuego() {
     // Reactivar botones
     desbloquearBotones();
 
-    // Regenerar nivel
+    // Generar nivel limpio
     generarNivel();
     actualizarUI();
 
     mensajeEl.textContent = "✨ ¡Nuevo juego iniciado!";
+
+    // ▶️ REINICIAR LOOPS
+    iniciarLoops();
 }
 
-// Evento botón reiniciar
+// ===== EVENTO BOTÓN =====
 if (reiniciarBtn) {
     reiniciarBtn.addEventListener("click", reiniciarJuego);
 }
 
-// Observer de vida del jugador
-setInterval(() => {
-    if (jugador.vida <= 0 && modalGameOver.style.display !== "flex") {
-        // Mostrar puntaje final
-        if (puntajeFinalEl) puntajeFinalEl.textContent = jugador.puntaje;
+// ===== DETECTOR GAME OVER (MEJORADO) =====
+function checkGameOver() {
+    if (jugador.vida <= 0 && juegoActivo) {
+        juegoActivo = false;
+
+        // Mostrar puntaje
+        if (puntajeFinalEl) {
+            puntajeFinalEl.textContent = jugador.puntaje;
+        }
 
         // Mostrar modal
         modalGameOver.style.display = "flex";
 
-        // Bloquear todo
+        // Bloquear botones
         bloquearBotones();
-        juegoActivo = false;
+
+        // 🛑 DETENER LOOPS
+        detenerLoops();
     }
-}, 100);
+}
+
+// Intervalo más optimizado
+setInterval(checkGameOver, 300);
+
+// ===== INICIO DEL JUEGO =====
+iniciarLoops();
