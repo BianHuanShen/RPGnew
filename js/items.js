@@ -3,28 +3,40 @@
 // ===============================
 function asegurarInventario() {
     const items = [
-        // 🟢 Comunes
-        "pocion", "espada", "armadura",
-        "casco", "botas", "pantalon",
+        // 🟢 COMUNES (base del juego)
+        "pocion",
+        "espada",
+        "armadura",
+        "casco",
+        "camisa",
+        "botas",
+        "pantalon",
 
-        // 🔵 Raros
-        "cristal", "orbe",
-        "arco", "daga", "guantes",
+        // 🔵 RAROS (mejoras híbridas)
+        "cristal",
+        "orbe",
+        "daga",
+        "guantes",
 
-        // 🟣 Épicos
-        "armaduraEpica", "botasEpicas", "cascoEpico",
+        // 🟣 ÉPICOS (stats altos)
+        "armaduraEpica",
+        "botasEpicas",
+        "cascoEpico",
 
-        // 🟡 Legendarios
-        "espadaLegendaria", "armaduraLegendaria",
+        // 🟡 LEGENDARIOS (top tier)
+        "espadaLegendaria",
+        "armaduraLegendaria",
 
-        // Otros
-        "magia", "orbeUsados"
+        // ✨ SISTEMAS
+        "magia",
+        "orbeUsados"
     ];
 
     items.forEach(item => {
         jugador.inventario[item] = Number(jugador.inventario[item]) || 0;
     });
 
+    // Asegurar magia como número
     jugador.magia = Number(jugador.magia) || 0;
 }
 // ===== CURACIÓN =====
@@ -156,6 +168,41 @@ function usarOrbe() {
     animarBoton(usarOrbeBtn);
     actualizarUI();
 }
+// ===== ARMADURA ÉPICA =====
+function equiparArmaduraEpica() {
+    if (!juegoActivo) return;
+    asegurarInventario();
+
+    if (jugador.inventario.armaduraEpica <= 0) {
+        mensajeEl.textContent = "❌ No tienes armaduras épicas";
+        return;
+    }
+
+    jugador.defensa += 15;
+    jugador.inventario.armaduraEpica--;
+    mensajeEl.textContent = "🛡️ ¡Armadura Épica equipada! (+15 defensa)";
+
+    animarBoton(equiparArmaduraEpicaBtn);
+    actualizarUI();
+}
+function equiparDaga() {
+    if (!juegoActivo) return;
+    asegurarInventario();
+
+    if (jugador.inventario.daga <= 0) {
+        mensajeEl.textContent = "❌ No tienes dagas";
+        return;
+    }
+
+    const atk = escalarStat(5);
+
+    jugador.ataque += atk;
+    jugador.inventario.daga--;
+
+    mensajeEl.textContent = `🗡️ Daga (+${atk} ataque)`;
+
+    actualizarUI();
+}
 
 // ===== ESPADA LEGENDARIA =====
 function equiparEspadaLegendaria() {
@@ -178,24 +225,8 @@ function equiparEspadaLegendaria() {
     animarBoton(equiparEspadaLegendariaBtn);
     actualizarUI();
 }
-// ===== ARMADURA ÉPICA =====
-function equiparArmaduraEpica() {
-    if (!juegoActivo) return;
-    asegurarInventario();
-
-    if (jugador.inventario.armaduraEpica <= 0) {
-        mensajeEl.textContent = "❌ No tienes armaduras épicas";
-        return;
-    }
-
-    jugador.defensa += 15;
-    jugador.inventario.armaduraEpica--;
-    mensajeEl.textContent = "🛡️ ¡Armadura Épica equipada! (+15 defensa)";
-
-    animarBoton(equiparArmaduraEpicaBtn);
-    actualizarUI();
-}
 function equiparArmaduraLegendaria() {
+    if (!juegoActivo) return;
     asegurarInventario();
 
     if (jugador.inventario.armaduraLegendaria <= 0) {
@@ -204,16 +235,21 @@ function equiparArmaduraLegendaria() {
     }
 
     const def = escalarStat(20);
-    const hp = escalarStat(30);
+    const hp = escalarStat(25);
 
     jugador.defensa += def;
     jugador.vidaMax += hp;
     jugador.inventario.armaduraLegendaria--;
 
-    mensajeEl.textContent = `🛡️ LEGENDARIA (+${def} defensa, +${hp} vida)`; 
+    mensajeEl.textContent = `🛡️ LEGENDARIA (+${def} defensa, +${hp} vida)`;
+
     actualizarUI();
 }
+// ===============================
+// ropa
+// ===============================
 function equiparCasco() {
+    if (!juegoActivo) return;
     asegurarInventario();
 
     if (jugador.inventario.casco <= 0) {
@@ -221,80 +257,39 @@ function equiparCasco() {
         return;
     }
 
-    const def = escalarStat(2);
+    const def = escalarStat(3);
+    const hp = escalarStat(2);
 
     jugador.defensa += def;
+    jugador.vidaMax += hp;
     jugador.inventario.casco--;
 
-    mensajeEl.textContent = `⛑️ Casco equipado (+${def} defensa)`;
+    mensajeEl.textContent = `⛑️ Casco (+${def} defensa, +${hp} vida)`;
+
     actualizarUI();
 }
-function equiparBotas() {
+function equiparCamisa() {
+    if (!juegoActivo) return;
     asegurarInventario();
 
-    if (jugador.inventario.botas <= 0) {
-        mensajeEl.textContent = "❌ No tienes botas";
+    if (jugador.inventario.camisa <= 0) {
+        mensajeEl.textContent = "❌ No tienes camisas";
         return;
     }
 
-    const evade = Math.min(5 + jugador.nivel, 25);
+    const def = escalarStat(4);
+    const hp = escalarStat(6);
 
-    jugador.defensa += 1;
-    jugador.inventario.botas--;
-
-    mensajeEl.textContent = `👢 Botas equipadas (+1 defensa, +${evade}% evasión)`; 
-    actualizarUI();
-}
-function equiparPantalon() {
-    asegurarInventario();
-
-    if (jugador.inventario.pantalon <= 0) {
-        mensajeEl.textContent = "❌ No tienes pantalones";
-        return;
-    }
-
-    const hp = escalarStat(8);
-
+    jugador.defensa += def;
     jugador.vidaMax += hp;
-    jugador.inventario.pantalon--;
+    jugador.inventario.camisa--;
 
-    mensajeEl.textContent = `👖 Pantalón equipado (+${hp} vida)`; 
-    actualizarUI();
-}
-function equiparPantalon() {
-    asegurarInventario();
+    mensajeEl.textContent = `👕 Camisa equipada (+${def} defensa, +${hp} vida)`;
 
-    if (jugador.inventario.pantalon <= 0) {
-        mensajeEl.textContent = "❌ No tienes pantalones";
-        return;
-    }
-
-    const hp = escalarStat(8);
-
-    jugador.vidaMax += hp;
-    jugador.inventario.pantalon--;
-
-    mensajeEl.textContent = `👖 Pantalón equipado (+${hp} vida)`; 
-    actualizarUI();
-}
-function equiparDaga() {
-    asegurarInventario();
-
-    if (jugador.inventario.daga <= 0) {
-        mensajeEl.textContent = "❌ No tienes dagas";
-        return;
-    }
-
-    const atk = escalarStat(4);
-    const velocidad = 10 + jugador.nivel;
-
-    jugador.ataque += atk;
-    jugador.inventario.daga--;
-
-    mensajeEl.textContent = `🗡️ Daga equipada (+${atk} ataque, +${velocidad}% velocidad)`; 
     actualizarUI();
 }
 function equiparGuantes() {
+    if (!juegoActivo) return;
     asegurarInventario();
 
     if (jugador.inventario.guantes <= 0) {
@@ -309,27 +304,50 @@ function equiparGuantes() {
     jugador.magia += magia;
     jugador.inventario.guantes--;
 
-    mensajeEl.textContent = `🧤 Guantes equipados (+${atk} ataque, +${magia} magia)`; 
+    mensajeEl.textContent = `🧤 Guantes (+${atk} ataque, +${magia} magia)`;
+
     actualizarUI();
 }
-function equiparBotasEpicas() {
+function equiparPantalon() {
+    if (!juegoActivo) return;
     asegurarInventario();
 
-    if (jugador.inventario.botasEpicas <= 0) {
-        mensajeEl.textContent = "❌ No tienes botas épicas";
+    if (jugador.inventario.pantalon <= 0) {
+        mensajeEl.textContent = "❌ No tienes pantalones";
         return;
     }
 
-    const def = escalarStat(4);
-    const evade = 20 + jugador.nivel;
+    const hp = escalarStat(10);
+
+    jugador.vidaMax += hp;
+    jugador.inventario.pantalon--;
+
+    mensajeEl.textContent = `👖 Pantalón (+${hp} vida)`;
+
+    actualizarUI();
+}
+function equiparBotas() {
+    if (!juegoActivo) return;
+    asegurarInventario();
+
+    if (jugador.inventario.botas <= 0) {
+        mensajeEl.textContent = "❌ No tienes botas";
+        return;
+    }
+
+    const def = escalarStat(2);
+    const hp = escalarStat(3);
 
     jugador.defensa += def;
-    jugador.inventario.botasEpicas--;
+    jugador.vidaMax += hp;
+    jugador.inventario.botas--;
 
-    mensajeEl.textContent = `👢 Botas épicas (+${def} defensa, +${evade}% evasión)`; 
+    mensajeEl.textContent = `👢 Botas (+${def} defensa, +${hp} vida)`;
+
     actualizarUI();
 }
 function equiparCascoEpico() {
+    if (!juegoActivo) return;
     asegurarInventario();
 
     if (jugador.inventario.cascoEpico <= 0) {
@@ -337,11 +355,34 @@ function equiparCascoEpico() {
         return;
     }
 
-    const def = escalarStat(6);
+    const def = escalarStat(7);
+    const hp = escalarStat(5);
 
     jugador.defensa += def;
+    jugador.vidaMax += hp;
     jugador.inventario.cascoEpico--;
 
-    mensajeEl.textContent = `⛑️ Casco épico (+${def} defensa)`; 
+    mensajeEl.textContent = `⛑️ Casco épico (+${def} defensa, +${hp} vida)`;
+
+    actualizarUI();
+}
+function equiparBotasEpicas() {
+    if (!juegoActivo) return;
+    asegurarInventario();
+
+    if (jugador.inventario.botasEpicas <= 0) {
+        mensajeEl.textContent = "❌ No tienes botas épicas";
+        return;
+    }
+
+    const def = escalarStat(6);
+    const hp = escalarStat(6);
+
+    jugador.defensa += def;
+    jugador.vidaMax += hp;
+    jugador.inventario.botasEpicas--;
+
+    mensajeEl.textContent = `👢 Botas épicas (+${def} defensa, +${hp} vida)`;
+
     actualizarUI();
 }
