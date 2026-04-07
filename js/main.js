@@ -517,6 +517,11 @@ function revisarEstado() {
         jugador.vidaMax += 10;
         jugador.vida = jugador.vidaMax;
 
+        // 🎁 Bonus loot por completar nivel
+     if (typeof darLoot === "function") {
+        const lootFinal = darLoot();
+        mensajeEl.innerHTML += `<br>${lootFinal}`;
+        }
         // NUEVO: Stats cada 3 niveles
         if (nivelActual % 3 === 0) {
             jugador.ataque += 2;
