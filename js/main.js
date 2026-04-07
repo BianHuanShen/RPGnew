@@ -554,41 +554,57 @@ function atacar() {
 }
 // ===== REVISAR ESTADO MEJORADO =====
 function revisarEstado() {
+    // 💀 GAME OVER
     if (jugador.vida <= 0) {
         jugador.vida = 0;
         juegoActivo = false;
-        mensajeEl.innerHTML = "<span style='color:#e74c3c;font-size:18px'>💀 HAS SIDO DERROTADO 💀</span>";
+
+        mensajeEl.innerHTML = `
+        <span style='color:#e74c3c;font-size:18px'>
+        💀 HAS SIDO DERROTADO 💀
+        </span>`;
+
         bloquearBotones();
         return;
     }
-
+    // ✅ NIVEL COMPLETADO
     if (enemigos.length === 0) {
-        // NUEVO: Bonus de nivel
         const bonusNivel = nivelActual * 5;
         jugador.puntaje += bonusNivel;
 
         nivelActual++;
         jugador.nivel++;
+        // ❤️ Mejora de vida
         jugador.vidaMax += 10;
         jugador.vida = jugador.vidaMax;
-
-        // 🎁 Bonus loot por completar nivel
-     if (typeof darLoot === "function") {
-        const lootFinal = darLoot();
-        mensajeEl.innerHTML += `<br>${lootFinal}`;
-        }
-        // NUEVO: Stats cada 3 niveles
+        // 📈 Stats cada 3 niveles
         if (nivelActual % 3 === 0) {
             jugador.ataque += 2;
             jugador.defensa += 1;
         }
+        // 🧠 MENSAJE LIMPIO (sin sobrescribir)
+        let mensaje = `
+        <span style="color:#f1c40f;font-size:16px">
+        ✨ ¡NIVEL ${jugador.nivel} COMPLETADO! ✨
+        </span>
+        <br>+${bonusNivel} pts bonus, Vida restaurada`;
 
-        mensajeEl.innerHTML = `<span style="color:#f1c40f;font-size:16px">✨ ¡NIVEL ${jugador.nivel} COMPLETADO! ✨</span><br>+${bonusNivel} pts bonus, Vida restaurada`;
+        // 🎁 LOOT (bien integrado)
+        if (typeof darLoot === "function") {
+            const lootFinal = darLoot();
+            if (lootFinal) {
+                mensaje += `<br>${lootFinal}`;
+            }
+        }
 
-        setTimeout(generarNivel, 2000);
+        mensajeEl.innerHTML = mensaje;
+
+        // ⏳ Siguiente nivel
+        setTimeout(() => {
+            generarNivel();
+        }, 2000);
     }
 }
-
 // ===== BLOQUEAR/DESBLOQUEAR BOTONES =====
 function bloquearBotones() {
     const botones = [atacarBtn, curarBtn, equiparArmaBtn, equiparArmaduraBtn,
