@@ -26,10 +26,10 @@ const RUTAS_IMAGENES = {
         esqueleto: Array.from({ length: 10 }, (_, i) => `img/boss_esqueleto${i + 1}.jpeg`)
     },
     fallback: {
-        mago: 'img/mago.jpeg',
-        guerrero: 'img/enemigo1.jpeg',
+        mago: 'img/mago1.jpeg',
+        guerrero: 'img/guerrero1.jpeg',
         arquero: 'img/enemigo2.jpeg',
-        esqueleto: 'img/enemigo3.jpeg',
+        esqueleto: 'img/esqueleto1.jpeg',
         boss: 'img/boss.jpeg'
     }
 };
@@ -367,34 +367,6 @@ function atacar() {
     actualizarUI?.();
     revisarEstado();
 }
-// NUEVO: Loot temático por clase
-function darLootEspecial(clase, esJefe) {
-    if (typeof asegurarInventario === 'function') asegurarInventario();
-
-    const bonus = esJefe ? 2 : 1;
-
-    switch (clase) {
-        case 'mago':
-            jugador.inventario.orbe += 1 * bonus;
-            return `${bonus}x Orbe (magia)`;
-        case 'guerrero':
-            jugador.inventario.espada += 1 * bonus;
-            return `${bonus}x Espada mejorada`;
-        case 'arquero':
-            jugador.inventario.cristal += 1 * bonus;
-            return `${bonus}x Cristal (precisión)`;
-        case 'esqueleto':
-            if (Math.random() < 0.3 || esJefe) {
-                jugador.inventario.armaduraEpica += 1;
-                return "¡Armadura Épica!";
-            }
-            jugador.inventario.armadura += 2;
-            return "2x Armadura ósea";
-        default:
-            return null;
-    }
-}
-
 // ===== ATAQUE ENEMIGOS MEJORADO =====
 function ataqueEnemigos() {
     if (!juegoActivo || jugador.vida <= 0) return;
