@@ -1,42 +1,47 @@
 // ===============================
 // REINICIO & GAME LOOP SYSTEM
 // ===============================
-
 // ===== CONTROL DE LOOPS =====
 let gameLoopActivo = false;
 let intervaloAtaque = null;
-
+let intervaloGameOver = null;
 // ===== LOOP PRINCIPAL =====
 function iniciarLoops() {
-    if (gameLoopActivo || intervaloAtaque || intervaloGameOver) return;
+    if (gameLoopActivo) return;
 
     gameLoopActivo = true;
 
-    // Loop de movimiento
+    // 🔥 Loop de movimiento (usa requestAnimationFrame)
     moverEnemigos();
 
-    // Ataque automático enemigos
+    // ⚔️ Ataque automático de enemigos
     intervaloAtaque = setInterval(() => {
-        if (juegoActivo) ataqueEnemigos();
+        if (juegoActivo) {
+            ataqueEnemigos();
+        }
     }, 1200);
 
-    // Check Game Over
-    let intervaloGameOver = null;
+    // 💀 Check Game Over
+    intervaloGameOver = setInterval(() => {
+        checkGameOver();
+    }, 300);
 }
-// ===== Detener LOOP =====
+// ===== DETENER LOOPS =====
 function detenerLoops() {
     gameLoopActivo = false;
 
+    // 🛑 Detener ataque automático
     if (intervaloAtaque) {
         clearInterval(intervaloAtaque);
         intervaloAtaque = null;
     }
-    if (intervaloGameOver) {
-    clearInterval(intervaloGameOver);
-    intervaloGameOver = null;
-}
-}
 
+    // 🛑 Detener check de Game Over
+    if (intervaloGameOver) {
+        clearInterval(intervaloGameOver);
+        intervaloGameOver = null;
+    }
+}
 // ===== MODAL GAME OVER =====
 const modalGameOver = document.createElement("div");
 modalGameOver.id = "modalGameOver";
