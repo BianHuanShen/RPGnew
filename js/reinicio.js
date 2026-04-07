@@ -8,19 +8,22 @@ let intervaloAtaque = null;
 
 // ===== LOOP PRINCIPAL =====
 function iniciarLoops() {
-    if (gameLoopActivo) return;
+    if (gameLoopActivo || intervaloAtaque || intervaloGameOver) return;
 
     gameLoopActivo = true;
 
-    // 🔥 moverEnemigos() tiene su propio loop interno
+    // Loop de movimiento
     moverEnemigos();
 
     // Ataque automático enemigos
     intervaloAtaque = setInterval(() => {
         if (juegoActivo) ataqueEnemigos();
     }, 1200);
-}
 
+    // Check Game Over
+    intervaloGameOver = setInterval(checkGameOver, 300);
+}
+// ===== Detener LOOP =====
 function detenerLoops() {
     gameLoopActivo = false;
 
@@ -28,6 +31,10 @@ function detenerLoops() {
         clearInterval(intervaloAtaque);
         intervaloAtaque = null;
     }
+    if (intervaloGameOver) {
+    clearInterval(intervaloGameOver);
+    intervaloGameOver = null;
+}
 }
 
 // ===== MODAL GAME OVER =====
@@ -117,7 +124,7 @@ function checkGameOver() {
 }
 
 // ⏱️ CHECK GAME OVER
-setInterval(checkGameOver, 300);
+let intervaloGameOver = setInterval(checkGameOver, 300);
 
 // ===== ICONOS DE CLASE =====
 function getIconoClase(clase) {
