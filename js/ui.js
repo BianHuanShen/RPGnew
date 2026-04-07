@@ -29,41 +29,43 @@ function actualizarUI() {
     const bonusOrbes = (jugador.inventario.orbeUsados || 0) * 2;
     const maxMagia = maxMagiaBase + bonusOrbes;
 
-    // ===== INVENTARIO UI =====
+    // ===== INVENTARIO GENERAL =====
     if (listaInventarioEl) {
         listaInventarioEl.innerHTML = `
-            <li>🟢 <b>Comunes</b></li>
             <li>🧪 Pociones: ${jugador.inventario.pocion}</li>
+
+            <li><b>🟢 Comunes</b></li>
             <li>⚔️ Espadas: ${jugador.inventario.espada}</li>
             <li>🛡️ Armaduras: ${jugador.inventario.armadura}</li>
             <li>⛑️ Cascos: ${jugador.inventario.casco}</li>
             <li>👢 Botas: ${jugador.inventario.botas}</li>
             <li>👖 Pantalones: ${jugador.inventario.pantalon}</li>
 
-            <li>🔵 <b>Raros</b></li>
+            <li><b>🔵 Raros</b></li>
             <li>💎 Cristales: ${jugador.inventario.cristal}</li>
             <li>🔮 Orbes: ${jugador.inventario.orbe}</li>
             <li>🏹 Arcos: ${jugador.inventario.arco}</li>
             <li>🗡️ Dagas: ${jugador.inventario.daga}</li>
             <li>🧤 Guantes: ${jugador.inventario.guantes}</li>
 
-            <li>🟣 <b>Épicos</b></li>
-            <li>🛡️ Armaduras Épicas: ${jugador.inventario.armaduraEpica}</li>
+            <li><b>🟣 Épicos</b></li>
+            <li>🛡️ Armadura Épica: ${jugador.inventario.armaduraEpica}</li>
             <li>👢 Botas Épicas: ${jugador.inventario.botasEpicas}</li>
-            <li>⛑️ Cascos Épicos: ${jugador.inventario.cascoEpico}</li>
+            <li>⛑️ Casco Épico: ${jugador.inventario.cascoEpico}</li>
 
-            <li>🟡 <b>Legendarios</b></li>
-            <li>⚔️ Espadas Legendarias: ${jugador.inventario.espadaLegendaria}</li>
-            <li>🛡️ Armaduras Legendarias: ${jugador.inventario.armaduraLegendaria}</li>
+            <li><b>🟡 Legendarios</b></li>
+            <li>⚔️ Espada Legendaria: ${jugador.inventario.espadaLegendaria}</li>
+            <li>🛡️ Armadura Legendaria: ${jugador.inventario.armaduraLegendaria}</li>
 
-            <li>✨ Magia: ${jugador.magia} / ${maxMagia} ${bonusOrbes > 0 ? `(+${bonusOrbes} Orbes)` : ""}</li>
+            <li><b>✨ Magia:</b> ${jugador.magia} / ${maxMagia} 
+                ${bonusOrbes > 0 ? `(+${bonusOrbes} bonus)` : ""}
+            </li>
         `;
     }
 
-    // ===== CONTROL DE BOTONES =====
-
-    const toggle = (btn, condition) => {
-        if (btn) btn.style.display = condition ? "block" : "none";
+    // ===== BOTONES DINÁMICOS =====
+    const toggle = (btn, cond) => {
+        if (btn) btn.style.display = cond ? "block" : "none";
     };
 
     // Consumibles
@@ -92,7 +94,7 @@ function actualizarUI() {
     toggle(equiparEspadaLegendariaBtn, jugador.inventario.espadaLegendaria > 0);
     toggle(equiparArmaduraLegendariaBtn, jugador.inventario.armaduraLegendaria > 0);
 
-    // ===== BARRAS TIPO MMORPG =====
+    // ===== BARRAS MMORPG =====
     actualizarBarraMMORPG(porcentajeVida, maxMagia);
 }
 
@@ -127,13 +129,21 @@ function animarBoton(btn) {
 // ===============================
 const style = document.createElement("style");
 style.textContent = `
-    .usar-item-anim {
-        animation: pulse 0.3s ease;
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
-        100% { transform: scale(1); }
-    }
+.usar-item-anim {
+    animation: pulse 0.3s ease;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
+    100% { transform: scale(1); }
+}
 `;
 document.head.appendChild(style);
+
+// ===============================
+// INVENTARIO POR CATEGORÍA (OPCIONAL)
+// ===============================
+const inventarioComunesEl = document.getElementById("inventarioComunes");
+const inventarioRarosEl = document.getElementById("inventarioRaros");
+const inventarioEpicosEl = document.getElementById("inventarioEpicos");
+const inventarioLegendariosEl = document.getElementById("inventarioLegendarios");
