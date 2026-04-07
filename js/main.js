@@ -498,8 +498,9 @@ function moverEnemigos() {
             enemigoDiv.style.top = Math.max(0, Math.min(newTop, maxY)) + "px";
         }
     });
-
-    requestAnimationFrame(moverEnemigos);
+    if (gameLoopActivo) {
+        requestAnimationFrame(moverEnemigos);
+    }
 }
 // ===== REVISAR ESTADO MEJORADO =====
 function revisarEstado() {
@@ -538,7 +539,7 @@ function bloquearBotones() {
     const botones = [atacarBtn, curarBtn, equiparArmaBtn, equiparArmaduraBtn,
         aprenderMagiaBtn, usarCristalBtn, usarOrbeBtn,
         equiparEspadaLegendariaBtn, equiparArmaduraEpicaBtn];
-    botones.forEach(btn => {
+        botones.forEach(btn => {
         if (btn) btn.disabled = true;
     });
 }
@@ -546,7 +547,7 @@ function bloquearBotones() {
 function desbloquearBotones() {
     const botones = [atacarBtn, curarBtn, equiparArmaBtn, equiparArmaduraBtn,
         aprenderMagiaBtn];
-    botones.forEach(btn => {
+        botones.forEach(btn => {
         if (btn) btn.disabled = false;
     });
 }
