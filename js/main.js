@@ -634,58 +634,21 @@ function revisarEstado() {
     }
 }
 /*// ===== BLOQUEAR/DESBLOQUEAR BOTONES =====
+const todosBotones = [
+    atacarBtn, curarBtn, equiparArmaBtn, equiparArmaduraBtn,
+    aprenderMagiaBtn, usarCristalBtn, usarOrbeBtn,
+    equiparEspadaLegendariaBtn, equiparArmaduraEpicaBtn,
+    equiparArmaduraLegendariaBtn, equiparCascoBtn, equiparCamisaBtn,
+    equiparGuantesBtn, equiparPantalonBtn, equiparBotasBtn,
+    equiparCascoEpicoBtn, equiparBotasEpicasBtn
+];
+
 function bloquearBotones() {
-    const botones = [
-        atacarBtn, curarBtn,
-        equiparArmaBtn, equiparArmaduraBtn,
-        aprenderMagiaBtn,
-        usarCristalBtn, usarOrbeBtn,
-
-        // Equipamiento
-        equiparEspadaLegendariaBtn,
-        equiparArmaduraEpicaBtn,
-        equiparArmaduraLegendariaBtn,
-
-        equiparCascoBtn,
-        equiparCamisaBtn,
-        equiparGuantesBtn,
-        equiparPantalonBtn,
-        equiparBotasBtn,
-
-        equiparCascoEpicoBtn,
-        equiparBotasEpicasBtn
-    ];
-
-    botones.forEach(btn => {
-        if (btn) btn.disabled = true;
-    });
+    todosBotones.forEach(btn => btn && (btn.disabled = true));
 }
 
 function desbloquearBotones() {
-    const botones = [
-        atacarBtn, curarBtn,
-        equiparArmaBtn, equiparArmaduraBtn,
-        aprenderMagiaBtn,
-        usarCristalBtn, usarOrbeBtn,
-
-        // Equipamiento
-        equiparEspadaLegendariaBtn,
-        equiparArmaduraEpicaBtn,
-        equiparArmaduraLegendariaBtn,
-
-        equiparCascoBtn,
-        equiparCamisaBtn,
-        equiparGuantesBtn,
-        equiparPantalonBtn,
-        equiparBotasBtn,
-
-        equiparCascoEpicoBtn,
-        equiparBotasEpicasBtn
-    ];
-
-    botones.forEach(btn => {
-        if (btn) btn.disabled = false;
-    });
+    todosBotones.forEach(btn => btn && (btn.disabled = false));
 }
 // ===== EVENT LISTENERS =====
 document.addEventListener("DOMContentLoaded", () => {
