@@ -1,16 +1,16 @@
 // ===============================
-// UI SYSTEM - ACTUALIZACIONES PRO (VERSION MEJORADA)
+// UI SYSTEM - ACTUALIZACIÓN AVANZADA
 // ===============================
 
 function actualizarUI() {
-    if (!jugador) return; // Protege si el jugador aún no está definido
+    if (!jugador) return; // Protege si jugador no existe
 
     // ===== VIDA =====
     const porcentajeVida = Math.max(0, (jugador.vida / jugador.vidaMax) * 100);
     if (vidaJugadorFill) {
         vidaJugadorFill.style.width = `${porcentajeVida}%`;
 
-        // Color según vida
+        // Color de barra según vida
         vidaJugadorFill.style.background = porcentajeVida > 60
             ? "linear-gradient(90deg, #2ecc71, #27ae60)"
             : porcentajeVida > 30
@@ -30,7 +30,7 @@ function actualizarUI() {
     const bonusOrbes = (jugador.inventario.orbeUsados || 0) * 2;
     const maxMagia = maxMagiaBase + bonusOrbes;
 
-    // ===== INVENTARIO GENERAL =====
+    // ===== INVENTARIO COMPLETO =====
     if (listaInventarioEl) {
         listaInventarioEl.innerHTML = `
             <li>🧪 Pociones: ${jugador.inventario.pocion || 0}</li>
@@ -58,9 +58,7 @@ function actualizarUI() {
             <li>⚔️ Espada Legendaria: ${jugador.inventario.espadaLegendaria || 0}</li>
             <li>🛡️ Armadura Legendaria: ${jugador.inventario.armaduraLegendaria || 0}</li>
 
-            <li><b>✨ Magia:</b> ${jugador.magia} / ${maxMagia} 
-                ${bonusOrbes > 0 ? `(+${bonusOrbes} bonus)` : ""}
-            </li>
+            <li><b>✨ Magia:</b> ${jugador.magia} / ${maxMagia} ${bonusOrbes > 0 ? `(+${bonusOrbes} bonus)` : ""}</li>
         `;
     }
 
@@ -82,29 +80,53 @@ function actualizarUI() {
         [equiparCascoEpicoBtn, jugador.inventario.cascoEpico > 0],
         [equiparEspadaLegendariaBtn, jugador.inventario.espadaLegendaria > 0],
         [equiparArmaduraLegendariaBtn, jugador.inventario.armaduraLegendaria > 0],
+        [abrirInventarioBtn, true] // siempre visible
     ];
+    botonesMap.forEach(([btn, cond]) => { if (btn) btn.style.display = cond ? "block" : "none"; });
 
-    botonesMap.forEach(([btn, cond]) => {
-        if (btn) btn.style.display = cond ? "block" : "none";
-    });
-
-    // ===== BARRAS MMORPG =====
-    actualizarBarraMMORPG(porcentajeVida, maxMagia);
+    // ===== BARRAS VISUALES =====
+    actualizarBarraMagia(maxMagia);
+    actualizarBarraVida(porcentajeVida);
 }
 
 // ===============================
-// BARRAS MMORPG
+// BARRA DE VIDA
 // ===============================
-function actualizarBarraMMORPG(porcentajeVida, maxMagia) {
+function actualizarBarraVida(porcentajeVida) {
     const vidaBarra = document.getElementById("vidaBarra");
-    const magiaBarra = document.getElementById("magiaBarra");
-
     if (vidaBarra) vidaBarra.style.width = `${porcentajeVida}%`;
+}
 
-    if (magiaBarra) {
-        const porcentajeMagia = maxMagia > 0 ? (jugador.magia / maxMagia) * 100 : 0;
-        magiaBarra.style.width = `${porcentajeMagia}%`;
+// ===============================
+// BARRA DE MAGIA
+// ===============================
+function actualizarBarraMagia(maxMagia) {
+    let barraMagia = document.getElementById("barraMagia");
+    if (!barraMagia) {
+        barraMagia = document.createElement("div");
+        barraMagia.id = "barraMagia";
+        barraMagia.style.cssText = "width:200px;height:20px;background:#444;border:2px solid #000;border-radius:5px;position:relative;margin-top:10px;";
+        const fillBase = document.createElement("div");
+        fillBase.id = "barraMagiaFillBase";
+        fillBase.style.cssText = "height:100%;width:0%;background:#00f;border-radius:3px;position:absolute;left:0;top:0;";
+        const fillBonus = document.createElement("div");
+        fillBonus.id = "barraMagiaFillBonus";
+        fillBonus.style.cssText = "height:100%;width:0%;background:#0ff;border-radius:3px;position:absolute;left:0;top:0;";
+        barraMagia.appendChild(fillBase);
+        barraMagia.appendChild(fillBonus);
+        document.getElementById("gameArea")?.appendChild(barraMagia);
     }
+
+    const fillBase = document.getElementById("barraMagiaFillBase");
+    const fillBonus = document.getElementById("barraMagiaFillBonus");
+
+    const maxMagiaBase = Math.floor(jugador.nivel / 3) * 2;
+    const bonusOrbes = (jugador.inventario.orbeUsados || 0) * 2;
+    const magiaBase = Math.min(jugador.magia, maxMagiaBase);
+    const magiaBonus = Math.max(0, jugador.magia - maxMagiaBase);
+
+    if (fillBase) fillBase.style.width = maxMagia > 0 ? (magiaBase / maxMagia) * 100 + "%" : "0%";
+    if (fillBonus) fillBonus.style.width = maxMagia > 0 ? (magiaBonus / maxMagia) * 100 + "%" : "0%";
 }
 
 // ===============================
@@ -122,9 +144,7 @@ function animarBoton(btn) {
 (function() {
     const style = document.createElement("style");
     style.textContent = `
-        .usar-item-anim {
-            animation: pulse 0.3s ease;
-        }
+        .usar-item-anim { animation: pulse 0.3s ease; }
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
@@ -133,11 +153,3 @@ function animarBoton(btn) {
     `;
     document.head.appendChild(style);
 })();
-
-// ===============================
-// INVENTARIO POR CATEGORÍA (OPCIONAL)
-// ===============================
-const inventarioComunesEl = document.getElementById("inventarioComunes");
-const inventarioRarosEl = document.getElementById("inventarioRaros");
-const inventarioEpicosEl = document.getElementById("inventarioEpicos");
-const inventarioLegendariosEl = document.getElementById("inventarioLegendarios");
