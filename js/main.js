@@ -1,8 +1,6 @@
 // ===============================
 // MINI RPG PRO - CORE SYSTEM v2.1
-// Sistema fusionado: Código base + Enemigos Mejorados
 // ===============================
-
 // ===== CONFIGURACIÓN DE ENEMIGOS (NUEVO) =====
 const TIPOS_ENEMIGO = {
     MAGO: { clase: 'mago', color: '#9b59b6', statMod: { ataque: 1.3, defensa: 0.7, velocidad: 0.8 } },
@@ -635,65 +633,108 @@ function revisarEstado() {
         setTimeout(generarNivel, 2000);
     }
 }
-// ===== BLOQUEAR/DESBLOQUEAR BOTONES =====
+/*// ===== BLOQUEAR/DESBLOQUEAR BOTONES =====
 function bloquearBotones() {
-    const botones = [atacarBtn, curarBtn, equiparArmaBtn, equiparArmaduraBtn,
-        aprenderMagiaBtn, usarCristalBtn, usarOrbeBtn,
-        equiparEspadaLegendariaBtn, equiparArmaduraEpicaBtn];
-        botones.forEach(btn => {
+    const botones = [
+        atacarBtn, curarBtn,
+        equiparArmaBtn, equiparArmaduraBtn,
+        aprenderMagiaBtn,
+        usarCristalBtn, usarOrbeBtn,
+
+        // Equipamiento
+        equiparEspadaLegendariaBtn,
+        equiparArmaduraEpicaBtn,
+        equiparArmaduraLegendariaBtn,
+
+        equiparCascoBtn,
+        equiparCamisaBtn,
+        equiparGuantesBtn,
+        equiparPantalonBtn,
+        equiparBotasBtn,
+
+        equiparCascoEpicoBtn,
+        equiparBotasEpicasBtn
+    ];
+
+    botones.forEach(btn => {
         if (btn) btn.disabled = true;
     });
 }
 
 function desbloquearBotones() {
-    const botones = [atacarBtn, curarBtn, equiparArmaBtn, equiparArmaduraBtn,
-        aprenderMagiaBtn];
-        botones.forEach(btn => {
+    const botones = [
+        atacarBtn, curarBtn,
+        equiparArmaBtn, equiparArmaduraBtn,
+        aprenderMagiaBtn,
+        usarCristalBtn, usarOrbeBtn,
+
+        // Equipamiento
+        equiparEspadaLegendariaBtn,
+        equiparArmaduraEpicaBtn,
+        equiparArmaduraLegendariaBtn,
+
+        equiparCascoBtn,
+        equiparCamisaBtn,
+        equiparGuantesBtn,
+        equiparPantalonBtn,
+        equiparBotasBtn,
+
+        equiparCascoEpicoBtn,
+        equiparBotasEpicasBtn
+    ];
+
+    botones.forEach(btn => {
         if (btn) btn.disabled = false;
     });
 }
-
 // ===== EVENT LISTENERS =====
 document.addEventListener("DOMContentLoaded", () => {
-    // Botones de acción
-    if (atacarBtn) atacarBtn.addEventListener("click", atacar);
-    if (curarBtn) curarBtn.addEventListener("click", () => {
-        if (typeof curar === 'function') curar();
-    });
-    if (equiparArmaBtn) equiparArmaBtn.addEventListener("click", () => {
-        if (typeof equiparArma === 'function') equiparArma();
-    });
-    if (equiparArmaduraBtn) equiparArmaduraBtn.addEventListener("click", () => {
-        if (typeof equiparArmadura === 'function') equiparArmadura();
-    });
-    if (aprenderMagiaBtn) aprenderMagiaBtn.addEventListener("click", () => {
-        if (typeof aprenderMagia === 'function') aprenderMagia();
-    });
-    if (usarCristalBtn) usarCristalBtn.addEventListener("click", () => {
-        if (typeof usarCristal === 'function') usarCristal();
-    });
-    if (usarOrbeBtn) usarOrbeBtn.addEventListener("click", () => {
-        if (typeof usarOrbe === 'function') usarOrbe();
-    });
-    if (equiparEspadaLegendariaBtn) equiparEspadaLegendariaBtn.addEventListener("click", () => {
-        if (typeof equiparEspadaLegendaria === 'function') equiparEspadaLegendaria();
-    });
-    if (equiparArmaduraEpicaBtn) equiparArmaduraEpicaBtn.addEventListener("click", () => {
-        if (typeof equiparArmaduraEpica === 'function') equiparArmaduraEpica();
+
+    // =========================
+    // ⚔️ ACCIONES PRINCIPALES
+    // =========================
+    atacarBtn?.addEventListener("click", atacar);
+    curarBtn?.addEventListener("click", curar);
+    equiparArmaBtn?.addEventListener("click", equiparArma);
+    equiparArmaduraBtn?.addEventListener("click", equiparArmadura);
+    aprenderMagiaBtn?.addEventListener("click", aprenderMagia);
+    usarCristalBtn?.addEventListener("click", usarCristal);
+    usarOrbeBtn?.addEventListener("click", usarOrbe);
+
+    // =========================
+    // 🟡 LEGENDARIOS
+    // =========================
+    equiparEspadaLegendariaBtn?.addEventListener("click", equiparEspadaLegendaria);
+    equiparArmaduraLegendariaBtn?.addEventListener("click", equiparArmaduraLegendaria);
+
+    // =========================
+    // 🟣 ÉPICOS
+    // =========================
+    equiparArmaduraEpicaBtn?.addEventListener("click", equiparArmaduraEpica);
+    equiparCascoEpicoBtn?.addEventListener("click", equiparCascoEpico);
+    equiparBotasEpicasBtn?.addEventListener("click", equiparBotasEpicas);
+
+    // =========================
+    // 🟢 EQUIPO BASE
+    // =========================
+    equiparCascoBtn?.addEventListener("click", equiparCasco);
+    equiparCamisaBtn?.addEventListener("click", equiparCamisa);
+    equiparGuantesBtn?.addEventListener("click", equiparGuantes);
+    equiparPantalonBtn?.addEventListener("click", equiparPantalon);
+    equiparBotasBtn?.addEventListener("click", equiparBotas);
+
+    // =========================
+    // 🎒 INVENTARIO
+    // =========================
+    abrirInventarioBtn?.addEventListener("click", () => {
+        if (ventanaInventario) ventanaInventario.style.display = "block";
     });
 
-    // Inventario
-    if (abrirInventarioBtn) {
-        abrirInventarioBtn.addEventListener("click", () => {
-            if (ventanaInventario) ventanaInventario.style.display = "block";
-        });
-    }
-    if (cerrarInventario) {
-        cerrarInventario.addEventListener("click", () => {
-            if (ventanaInventario) ventanaInventario.style.display = "none";
-        });
-    }
+    cerrarInventario?.addEventListener("click", () => {
+        if (ventanaInventario) ventanaInventario.style.display = "none";
+    });
 
+});*/
     // Movimiento con teclado
     document.addEventListener("keydown", e => {
         if (!juegoActivo) return;
