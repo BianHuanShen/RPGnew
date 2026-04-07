@@ -449,7 +449,7 @@ function ataqueEnemigos() {
         const distancia = Math.sqrt((jx - ex) ** 2 + (jy - ey) ** 2);
 
         // NUEVO: Rango según clase
-        let rangoAtaque = 80;
+        let rangoAtaque = 60;
         if (enemigo.claseInfo.clase === 'arquero') rangoAtaque = 120;
         if (enemigo.claseInfo.clase === 'mago') rangoAtaque = 100;
 
