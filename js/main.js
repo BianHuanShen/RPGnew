@@ -676,10 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 atacar();
                 break;
         }
-
-        ataqueEnemigos();
     });
-
     // Arrastre del jugador
     let dragging = false;
     let offsetX = 0, offsetY = 0;
@@ -709,8 +706,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         jugadorDiv.style.left = Math.max(0, Math.min(x, maxX)) + "px";
         jugadorDiv.style.top = Math.max(0, Math.min(y, maxY)) + "px";
-
-        ataqueEnemigos();
     }
 
     function stopDrag() {
@@ -724,13 +719,6 @@ document.addEventListener("DOMContentLoaded", () => {
     jugadorDiv.addEventListener("touchstart", startDrag);
     document.addEventListener("touchmove", onDrag);
     document.addEventListener("touchend", stopDrag);
-
-    // Iniciar loops
-    moverEnemigos();
-    setInterval(() => {
-        if (juegoActivo) ataqueEnemigos();
-    }, 800);
-
     // Generar primer nivel
     generarNivel();
 });
