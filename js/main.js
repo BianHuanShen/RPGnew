@@ -43,56 +43,89 @@ const jugador = {
     magia: 0,
     nivel: 1,
     puntaje: 0,
+
     inventario: {
+        // 🟢 Comunes
         pocion: 30,
         espada: 1,
         armadura: 1,
-        magia: 0,
+        casco: 0,
+        botas: 0,
+        pantalon: 0,
+
+        // 🔵 Raros
         cristal: 0,
         orbe: 0,
-        orbeUsados: 0,
+        arco: 0,
+        daga: 0,
+        guantes: 0,
+
+        // 🟣 Épicos
+        armaduraEpica: 0,
+        botasEpicas: 0,
+        cascoEpico: 0,
+
+        // 🟡 Legendarios
         espadaLegendaria: 0,
-        armaduraEpica: 0
+        armaduraLegendaria: 0,
+
+        // Otros
+        magia: 0,
+        orbeUsados: 0
     }
 };
-
 // ===== ESTADO GLOBAL =====
 let enemigos = [];
 let nivelActual = 1;
 let juegoActivo = true;
 let enemigosDerrotadosNivel = 0;
-
 // ===== SONIDOS =====
 const sonidoGolpe = new Audio("sonidos/golpe.mp3");
 const sonidoCritico = new Audio("sonidos/critico.mp3");
 const sonidoLoot = new Audio("sonidos/loot.mp3");
-
 // ===== DOM ELEMENTS =====
 const gameArea = document.getElementById("gameArea");
+// Stats jugador
 const vidaJugadorFill = document.getElementById("vidaJugadorFill");
 const ataqueJugadorEl = document.getElementById("ataqueJugador");
 const defensaJugadorEl = document.getElementById("defensaJugador");
 const magiaJugadorEl = document.getElementById("magiaJugador");
 const nivelJugadorEl = document.getElementById("nivelJugador");
 const puntajeEl = document.getElementById("puntaje");
+// Inventario (contenedor general)
 const listaInventarioEl = document.getElementById("listaInventario");
+// Mensajes y escenario
 const mensajeEl = document.getElementById("mensaje");
 const escenario = document.getElementById("escenario");
-
-// Botones
+// ===== BOTONES =====
+// Acciones principales
 const atacarBtn = document.getElementById("atacarBtn");
 const curarBtn = document.getElementById("curarBtn");
+const aprenderMagiaBtn = document.getElementById("aprenderMagiaBtn");
+// Equipamiento común
 const equiparArmaBtn = document.getElementById("equiparArmaBtn");
 const equiparArmaduraBtn = document.getElementById("equiparArmaduraBtn");
-const equiparEspadaLegendariaBtn = document.getElementById("equiparEspadaLegendariaBtn");
+const equiparCascoBtn = document.getElementById("equiparCascoBtn");
+const equiparBotasBtn = document.getElementById("equiparBotasBtn");
+const equiparPantalonBtn = document.getElementById("equiparPantalonBtn");
+// Equipamiento raro
+const equiparArcoBtn = document.getElementById("equiparArcoBtn");
+const equiparDagaBtn = document.getElementById("equiparDagaBtn");
+const equiparGuantesBtn = document.getElementById("equiparGuantesBtn");
+// Equipamiento épico
+const equiparBotasEpicasBtn = document.getElementById("equiparBotasEpicasBtn");
+const equiparCascoEpicoBtn = document.getElementById("equiparCascoEpicoBtn");
 const equiparArmaduraEpicaBtn = document.getElementById("equiparArmaduraEpicaBtn");
+// Equipamiento legendario
+const equiparEspadaLegendariaBtn = document.getElementById("equiparEspadaLegendariaBtn");
+const equiparArmaduraLegendariaBtn = document.getElementById("equiparArmaduraLegendariaBtn");
+// Consumibles
 const usarCristalBtn = document.getElementById("usarCristalBtn");
 const usarOrbeBtn = document.getElementById("usarOrbeBtn");
-const aprenderMagiaBtn = document.getElementById("aprenderMagiaBtn");
+// Inventario UI
 const abrirInventarioBtn = document.getElementById("abrirInventarioBtn");
 const ventanaInventario = document.getElementById("ventanaInventario");
 const cerrarInventario = document.getElementById("cerrarInventario");
-
 // Crear jugador visual
 const jugadorDiv = document.createElement("div");
 jugadorDiv.id = "jugador";
@@ -100,28 +133,23 @@ jugadorDiv.style.position = "absolute";
 jugadorDiv.style.left = "100px";
 jugadorDiv.style.top = "300px";
 gameArea.appendChild(jugadorDiv);
-
 // ===== FUNCIONES UTILITARIAS =====
 function esCritico() {
     return Math.random() < 0.2;
 }
-
 // NUEVO: Obtener clase aleatoria
 function getClaseAleatoria() {
     const claves = Object.keys(TIPOS_ENEMIGO);
     return TIPOS_ENEMIGO[claves[Math.floor(Math.random() * claves.length)]];
 }
-
 // NUEVO: Calcular variante según nivel (1-10)
 function getVarianteEnemigo(nivel) {
     return Math.min(Math.ceil(nivel / 2), 10);
 }
-
 // NUEVO: Sistema de rutas mejorado
 function getRutaEnemigo(enemigo) {
     const clase = enemigo.claseInfo.clase;
     const variante = enemigo.variante; // ✅ FIX
-
     if (enemigo.jefe) {
         const rutaJefe = RUTAS_IMAGENES.jefes[clase]?.[variante - 1];
         if (rutaJefe) return rutaJefe;
