@@ -9,7 +9,7 @@ let intervaloGameOver = null;
 
 // ===== LOOP PRINCIPAL =====
 function iniciarLoops() {
-    if (gameLoopActivo || intervaloAtaque || intervaloGameOver) return;
+    if (gameLoopActivo) return;
 
     gameLoopActivo = true;
 
