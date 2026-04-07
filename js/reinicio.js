@@ -117,25 +117,6 @@ function reiniciarJuego() {
 // ===== EVENTO BOTÓN =====
 reiniciarBtn?.addEventListener("click", reiniciarJuego);
 
-// ===== GAME OVER CONTROL =====
-function checkGameOver() {
-    if (jugador.vida <= 0 && juegoActivo) {
-        juegoActivo = false;
-
-        // Mostrar puntaje final
-        if (puntajeFinalEl) puntajeFinalEl.textContent = jugador.puntaje;
-
-        // Mostrar modal
-        modalGameOver.style.display = "flex";
-
-        // Bloquear botones
-        bloquearBotones();
-
-        // DETENER LOOPS
-        detenerLoops();
-    }
-}
-
 // ⏱️ CHECK GAME OVER
 let intervaloGameOver = setInterval(checkGameOver, 300);
 
