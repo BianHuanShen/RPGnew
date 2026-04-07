@@ -83,47 +83,47 @@ const sonidoCritico = new Audio("sonidos/critico.mp3");
 const sonidoLoot = new Audio("sonidos/loot.mp3");
 // ===== DOM ELEMENTS =====
 const gameArea = document.getElementById("gameArea");
-// Stats jugador
-const vidaJugadorFill = document.getElementById("vidaJugadorFill");
-const ataqueJugadorEl = document.getElementById("ataqueJugador");
-const defensaJugadorEl = document.getElementById("defensaJugador");
-const magiaJugadorEl = document.getElementById("magiaJugador");
-const nivelJugadorEl = document.getElementById("nivelJugador");
-const puntajeEl = document.getElementById("puntaje");
-// Inventario (contenedor general)
-const listaInventarioEl = document.getElementById("listaInventario");
-// Mensajes y escenario
-const mensajeEl = document.getElementById("mensaje");
-const escenario = document.getElementById("escenario");
-// ===== BOTONES =====
-// Acciones principales
-const atacarBtn = document.getElementById("atacarBtn");
-const curarBtn = document.getElementById("curarBtn");
-const aprenderMagiaBtn = document.getElementById("aprenderMagiaBtn");
-// Equipamiento común
-const equiparArmaBtn = document.getElementById("equiparArmaBtn");
-const equiparArmaduraBtn = document.getElementById("equiparArmaduraBtn");
-const equiparCascoBtn = document.getElementById("equiparCascoBtn");
-const equiparBotasBtn = document.getElementById("equiparBotasBtn");
-const equiparPantalonBtn = document.getElementById("equiparPantalonBtn");
-// Equipamiento raro
-const equiparArcoBtn = document.getElementById("equiparArcoBtn");
-const equiparDagaBtn = document.getElementById("equiparDagaBtn");
-const equiparGuantesBtn = document.getElementById("equiparGuantesBtn");
-// Equipamiento épico
-const equiparBotasEpicasBtn = document.getElementById("equiparBotasEpicasBtn");
-const equiparCascoEpicoBtn = document.getElementById("equiparCascoEpicoBtn");
-const equiparArmaduraEpicaBtn = document.getElementById("equiparArmaduraEpicaBtn");
-// Equipamiento legendario
-const equiparEspadaLegendariaBtn = document.getElementById("equiparEspadaLegendariaBtn");
-const equiparArmaduraLegendariaBtn = document.getElementById("equiparArmaduraLegendariaBtn");
-// Consumibles
-const usarCristalBtn = document.getElementById("usarCristalBtn");
-const usarOrbeBtn = document.getElementById("usarOrbeBtn");
-// Inventario UI
+// ===== STATS JUGADOR =====
+const vidaJugadorFill    = document.getElementById("vidaJugadorFill");
+const ataqueJugadorEl    = document.getElementById("ataqueJugador");
+const defensaJugadorEl   = document.getElementById("defensaJugador");
+const magiaJugadorEl     = document.getElementById("magiaJugador");
+const nivelJugadorEl     = document.getElementById("nivelJugador");
+const puntajeEl          = document.getElementById("puntaje");
+// ===== INVENTARIO =====
+const listaInventarioEl  = document.getElementById("listaInventario");
+// ===== MENSAJES Y ESCENARIO =====
+const mensajeEl          = document.getElementById("mensaje");
+const escenario          = document.getElementById("escenario");
+// --- Acciones principales ---
+const atacarBtn          = document.getElementById("atacarBtn");
+const curarBtn           = document.getElementById("curarBtn");
+const aprenderMagiaBtn   = document.getElementById("aprenderMagiaBtn");
+// --- Equipamiento común ---
+const equiparArmaBtn      = document.getElementById("equiparArmaBtn");
+const equiparArmaduraBtn  = document.getElementById("equiparArmaduraBtn");
+const equiparCascoBtn     = document.getElementById("equiparCascoBtn");
+const equiparCamisaBtn    = document.getElementById("equiparCamisaBtn");
+const equiparBotasBtn     = document.getElementById("equiparBotasBtn");
+const equiparPantalonBtn  = document.getElementById("equiparPantalonBtn");
+// --- Equipamiento raro ---
+const equiparArcoBtn      = document.getElementById("equiparArcoBtn");
+const equiparDagaBtn      = document.getElementById("equiparDagaBtn");
+const equiparGuantesBtn   = document.getElementById("equiparGuantesBtn");
+// --- Equipamiento épico ---
+const equiparArmaduraEpicaBtn  = document.getElementById("equiparArmaduraEpicaBtn");
+const equiparCascoEpicoBtn     = document.getElementById("equiparCascoEpicoBtn");
+const equiparBotasEpicasBtn    = document.getElementById("equiparBotasEpicasBtn");
+// --- Equipamiento legendario ---
+const equiparEspadaLegendariaBtn    = document.getElementById("equiparEspadaLegendariaBtn");
+const equiparArmaduraLegendariaBtn  = document.getElementById("equiparArmaduraLegendariaBtn");
+// --- Consumibles ---
+const usarCristalBtn  = document.getElementById("usarCristalBtn");
+const usarOrbeBtn     = document.getElementById("usarOrbeBtn");
+// --- Inventario UI ---
 const abrirInventarioBtn = document.getElementById("abrirInventarioBtn");
-const ventanaInventario = document.getElementById("ventanaInventario");
-const cerrarInventario = document.getElementById("cerrarInventario");
+const ventanaInventario  = document.getElementById("ventanaInventario");
+const cerrarInventario   = document.getElementById("cerrarInventario");
 // Crear jugador visual
 const jugadorDiv = document.createElement("div");
 jugadorDiv.id = "jugador";
