@@ -508,7 +508,7 @@ function moverEnemigos() {
         requestAnimationFrame(moverEnemigos);
     }
 }
-// ===== ATAQUE DEL JUGADOR MEJORADO =====
+/*// ===== ATAQUE DEL JUGADOR MEJORADO =====
 function atacar() {
     if (!juegoActivo || jugador.vida <= 0 || enemigos.length === 0) return;
 
@@ -580,7 +580,8 @@ function atacar() {
     actualizarUI();
     revisarEstado();
 }
-// ===== REVISAR ESTADO MEJORADO =====
+*/
+
 // ===== REVISAR ESTADO MEJORADO (FIX FINAL) =====
 function revisarEstado() {
     // 💀 GAME OVER
