@@ -12,93 +12,79 @@
     <link rel="stylesheet" href="css/respo.css">
 </head>
 <body>
-
     <center><h1>Senda Épica</h1></center>
 
-    <div class="game-layout">
+<div class="game-layout">
 
-        <!-- ACCIONES -->
-        <div id="acciones" class="caja">
-            <h2>🎮 Acciones</h2>
+    <!-- ACCIONES -->
+    <div id="acciones" class="caja">
+        <h2>🎮 Acciones</h2>
 
-    <button id="atacarBtn">⚔️ Atacar</button>
-    <button id="curarBtn">🧪 Curar</button>
+        <button id="atacarBtn">⚔️ Atacar</button>
+        <button id="curarBtn">🧪 Curar</button>
 
-    <!-- Comunes -->
-    <button id="equiparArmaBtn">⚔️ Espada</button>
-    <button id="equiparArmaduraBtn">🛡️ Armadura</button>
-    <button id="equiparCascoBtn">⛑️ Casco</button>
-    <button id="equiparBotasBtn">👢 Botas</button>
-    <button id="equiparPantalonBtn">👖 Pantalón</button>
+        <!-- Comunes -->
+        <button id="equiparArmaBtn">⚔️ Espada</button>
+        <button id="equiparArmaduraBtn">🛡️ Armadura</button>
+        <button id="equiparCascoBtn">⛑️ Casco</button>
+        <button id="equiparBotasBtn">👢 Botas</button>
+        <button id="equiparPantalonBtn">👖 Pantalón</button>
 
-    <!-- Raros -->
-    <button id="equiparArcoBtn">🏹 Arco</button>
-    <button id="equiparDagaBtn">🗡️ Daga</button>
-    <button id="equiparGuantesBtn">🧤 Guantes</button>
+        <!-- Raros -->
+        <button id="equiparArcoBtn">🏹 Arco</button>
+        <button id="equiparDagaBtn">🗡️ Daga</button>
+        <button id="equiparGuantesBtn">🧤 Guantes</button>
 
-    <!-- Épicos -->
-    <button id="equiparArmaduraEpicaBtn">🛡️ Armadura Épica</button>
-    <button id="equiparBotasEpicasBtn">👢 Botas Épicas</button>
-    <button id="equiparCascoEpicoBtn">⛑️ Casco Épico</button>
+        <!-- Épicos -->
+        <button id="equiparArmaduraEpicaBtn">🛡️ Armadura Épica</button>
+        <button id="equiparBotasEpicasBtn">👢 Botas Épicas</button>
+        <button id="equiparCascoEpicoBtn">⛑️ Casco Épico</button>
 
-    <!-- Legendarios -->
-    <button id="equiparEspadaLegendariaBtn">⚔️ Espada Legendaria</button>
-    <button id="equiparArmaduraLegendariaBtn">🛡️ Armadura Legendaria</button>
+        <!-- Legendarios -->
+        <button id="equiparEspadaLegendariaBtn">⚔️ Espada Legendaria</button>
+        <button id="equiparArmaduraLegendariaBtn">🛡️ Armadura Legendaria</button>
 
-    <!-- Consumibles -->
-    <button id="usarCristalBtn">💎 Cristal</button>
-    <button id="usarOrbeBtn">🔮 Orbe</button>
-    <button id="aprenderMagiaBtn">✨ Magia</button>
+        <!-- Consumibles -->
+        <button id="usarCristalBtn">💎 Cristal</button>
+        <button id="usarOrbeBtn">🔮 Orbe</button>
+        <button id="aprenderMagiaBtn">✨ Magia</button>
 
-    <!-- Inventario -->
-    <button id="abrirInventarioBtn">🎒 Inventario</button>
+        <!-- Inventario -->
+        <button id="abrirInventarioBtn">🎒 Inventario</button>
+    </div>
+
+    <!-- ESCENARIO -->
+    <div id="escenario">
+        <div id="gameArea"></div>
+    </div>
+
+    <!-- INFO JUGADOR -->
+    <div id="infoJugador" class="caja">
+        <h2>🧙 Jugador</h2>
+
+        <div class="barra-vida">
+            <div id="vidaJugadorFill"></div>
+        </div>
+
+        <p>⚔️ Ataque: <span id="ataqueJugador">10</span></p>
+        <p>🛡️ Defensa: <span id="defensaJugador">5</span></p>
+        <p>✨ Magia: <span id="magiaJugador">0</span></p>
+        <p>📈 Nivel: <span id="nivelJugador">1</span></p>
+        <p>🏆 Puntaje: <span id="puntaje">0</span></p>
+    </div>
+
 </div>
 
-<!-- ========================= -->
-<!-- INVENTARIO (VENTANA) -->
-<!-- ========================= -->
+<!-- INVENTARIO (ÚNICO Y CORRECTO) -->
 <div id="ventanaInventario" class="inventario-modal" style="display:none;">
     <div class="inventario-contenido">
         <h2>🎒 Inventario</h2>
 
-        <!-- 🔥 ESTE ES EL IMPORTANTE -->
         <ul id="listaInventario"></ul>
 
         <button id="cerrarInventario">❌ Cerrar</button>
     </div>
 </div>
-        </div>
-
-        <!-- ESCENARIO -->
-        <div id="escenario">
-            <div id="gameArea"></div>
-        </div>
-
-        <!-- INFO JUGADOR -->
-        <div id="infoJugador" class="caja">
-            <h2>🧙 Jugador</h2>
-
-            <div class="barra-vida">
-                <div id="vidaJugadorFill"></div>
-            </div>
-
-            <p>⚔️ Ataque: <span id="ataqueJugador">10</span></p>
-            <p>🛡️ Defensa: <span id="defensaJugador">5</span></p>
-            <p>✨ Magia: <span id="magiaJugador">0</span></p>
-            <p>📈 Nivel: <span id="nivelJugador">1</span></p>
-            <p>🏆 Puntaje: <span id="puntaje">0</span></p>
-        </div>
-
-    </div>
-
-    <!-- INVENTARIO MODAL -->
-    <div id="ventanaInventario" class="ventana">
-        <div class="ventana-contenido">
-            <span id="cerrarInventario" class="cerrar">&times;</span>
-            <h2>🎒 Inventario</h2>
-            <ul id="listaInventario"></ul>
-        </div>
-    </div>
 
     <!-- BARRA MMORPG -->
     <div id="barraRPG">
