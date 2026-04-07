@@ -21,16 +21,52 @@
         <div id="acciones" class="caja">
             <h2>🎮 Acciones</h2>
 
-            <button id="atacarBtn">⚔️ Atacar</button>
-            <button id="curarBtn">🧪 Curar</button>
-            <button id="equiparArmaBtn">⚔️ Equipar Espada</button>
-            <button id="equiparEspadaLegendariaBtn">⚔️ Espada Legendaria</button>
-            <button id="equiparArmaduraBtn">🛡️ Equipar Armadura</button>
-            <button id="equiparArmaduraEpicaBtn">🛡️ Armadura Épica</button>
-            <button id="usarCristalBtn">💎 Usar Cristal</button>
-            <button id="usarOrbeBtn">🔮 Usar Orbe</button>
-            <button id="aprenderMagiaBtn">✨ Aprender Magia</button>
-            <button id="abrirInventarioBtn">🎒 Inventario</button>
+    <button id="atacarBtn">⚔️ Atacar</button>
+    <button id="curarBtn">🧪 Curar</button>
+
+    <!-- Comunes -->
+    <button id="equiparArmaBtn">⚔️ Espada</button>
+    <button id="equiparArmaduraBtn">🛡️ Armadura</button>
+    <button id="equiparCascoBtn">⛑️ Casco</button>
+    <button id="equiparBotasBtn">👢 Botas</button>
+    <button id="equiparPantalonBtn">👖 Pantalón</button>
+
+    <!-- Raros -->
+    <button id="equiparArcoBtn">🏹 Arco</button>
+    <button id="equiparDagaBtn">🗡️ Daga</button>
+    <button id="equiparGuantesBtn">🧤 Guantes</button>
+
+    <!-- Épicos -->
+    <button id="equiparArmaduraEpicaBtn">🛡️ Armadura Épica</button>
+    <button id="equiparBotasEpicasBtn">👢 Botas Épicas</button>
+    <button id="equiparCascoEpicoBtn">⛑️ Casco Épico</button>
+
+    <!-- Legendarios -->
+    <button id="equiparEspadaLegendariaBtn">⚔️ Espada Legendaria</button>
+    <button id="equiparArmaduraLegendariaBtn">🛡️ Armadura Legendaria</button>
+
+    <!-- Consumibles -->
+    <button id="usarCristalBtn">💎 Cristal</button>
+    <button id="usarOrbeBtn">🔮 Orbe</button>
+    <button id="aprenderMagiaBtn">✨ Magia</button>
+
+    <!-- Inventario -->
+    <button id="abrirInventarioBtn">🎒 Inventario</button>
+</div>
+
+<!-- ========================= -->
+<!-- INVENTARIO (VENTANA) -->
+<!-- ========================= -->
+<div id="ventanaInventario" class="inventario-modal" style="display:none;">
+    <div class="inventario-contenido">
+        <h2>🎒 Inventario</h2>
+
+        <!-- 🔥 ESTE ES EL IMPORTANTE -->
+        <ul id="listaInventario"></ul>
+
+        <button id="cerrarInventario">❌ Cerrar</button>
+    </div>
+</div>
         </div>
 
         <!-- ESCENARIO -->
