@@ -21,7 +21,7 @@ function iniciarLoops() {
     }, 1200);
 
     // Check Game Over
-    intervaloGameOver = setInterval(checkGameOver, 300);
+    let intervaloGameOver = null;
 }
 // ===== Detener LOOP =====
 function detenerLoops() {
