@@ -2,7 +2,6 @@
 /* 📱 MÓVIL (hasta 600px)                  */
 /* ======================================= */
 @media (max-width: 600px) {
-
     body {
         padding: 10px;
     }
@@ -10,20 +9,17 @@
     h1 {
         font-size: 1.4rem;
     }
-
     .game-layout {
         flex-direction: column;
         align-items: center;
         gap: 10px;
     }
-
     /* Paneles arriba y abajo */
     #acciones,
     #infoJugador {
         width: 100%;
         max-width: 100%;
     }
-
     /* 🔥 ESCENARIO CLAVE (SIN ZOOM) */
     #escenario {
         width: 100%;
@@ -31,7 +27,6 @@
         aspect-ratio: 16 / 9;
         max-height: 60vh;
     }
-
     .caja {
         padding: 10px;
     }
@@ -45,14 +40,12 @@
         width: 100%;
         font-size: 0.85rem;
     }
-
     /* 🔥 jugador más pequeño */
     #jugador {
         width: 40px;
         height: 40px;
     }
 }
-
 /* ======================================= */
 /* 📲 TABLET (601px - 900px)               */
 /* ======================================= */
@@ -90,7 +83,6 @@
         height: 50px;
     }
 }
-
 /* ======================================= */
 /* 💻 LAPTOP (901px - 1200px)              */
 /* ======================================= */
@@ -114,7 +106,6 @@
         height: 60px;
     }
 }
-
 /* ======================================= */
 /* 🖥️ DESKTOP GRANDE (1201px+)            */
 /* ======================================= */
