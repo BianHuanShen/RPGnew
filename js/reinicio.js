@@ -37,16 +37,13 @@ function checkGameOver() {
     if (jugador.vida <= 0 && juegoActivo) {
         juegoActivo = false;
 
-        // UI
         if (puntajeFinalEl) {
             puntajeFinalEl.textContent = jugador.puntaje;
         }
 
         modalGameOver.style.display = "flex";
-
         bloquearBotones();
 
-        // 🛑 detener todo correctamente
         detenerLoops();
     }
 }
@@ -116,9 +113,6 @@ function reiniciarJuego() {
 
 // ===== EVENTO BOTÓN =====
 reiniciarBtn?.addEventListener("click", reiniciarJuego);
-
-// ⏱️ CHECK GAME OVER
-let intervaloGameOver = setInterval(checkGameOver, 300);
 
 // ===== ICONOS DE CLASE =====
 function getIconoClase(clase) {
