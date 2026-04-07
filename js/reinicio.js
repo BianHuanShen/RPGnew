@@ -1,5 +1,5 @@
 // ===============================
-// REINICIO SYSTEM (FIXED)
+// REINICIO SYSTEM (OPTIMIZADO)
 // ===============================
 
 // ===== CONTROL DE LOOPS =====
@@ -11,17 +11,12 @@ function iniciarLoops() {
 
     gameLoopActivo = true;
 
-    function loopMovimiento() {
-        if (!juegoActivo) return;
-        moverEnemigos();
-        requestAnimationFrame(loopMovimiento);
-    }
-
-    loopMovimiento();
+    // 🔥 IMPORTANTE: NO duplicar requestAnimationFrame
+    // moverEnemigos() ya tiene su propio loop interno
 
     intervaloAtaque = setInterval(() => {
         if (juegoActivo) ataqueEnemigos();
-    }, 800);
+    }, 1200); // ⏱️ más lento (antes 800)
 }
 
 function detenerLoops() {
@@ -50,12 +45,12 @@ document.body.appendChild(modalGameOver);
 const reiniciarBtn = document.getElementById("reiniciarBtn");
 const puntajeFinalEl = document.getElementById("puntajeFinal");
 
-// ===== REINICIAR JUEGO (FIXED) =====
+// ===== REINICIAR JUEGO =====
 function reiniciarJuego() {
-    // 🛑 DETENER LOOPS
+    // 🛑 DETENER TODO
     detenerLoops();
 
-    // Reset jugador
+    // ===== RESET JUGADOR =====
     jugador.vida = 100;
     jugador.vidaMax = 100;
     jugador.ataque = 10;
@@ -76,25 +71,23 @@ function reiniciarJuego() {
         armaduraEpica: 0
     };
 
-    // Reset estado global
+    // ===== RESET GLOBAL =====
     nivelActual = 1;
     juegoActivo = true;
     enemigos = [];
 
-    // Limpiar enemigos del DOM
+    // ===== LIMPIAR DOM =====
     gameArea.querySelectorAll(".enemigo").forEach(e => e.remove());
 
-    // Reset posición jugador (IMPORTANTE)
+    // ===== RESET POSICIÓN =====
     jugadorDiv.style.left = "100px";
     jugadorDiv.style.top = "300px";
 
-    // Ocultar modal
+    // ===== UI =====
     modalGameOver.style.display = "none";
-
-    // Reactivar botones
     desbloquearBotones();
 
-    // Generar nivel limpio
+    // ===== NUEVO NIVEL =====
     generarNivel();
     actualizarUI();
 
@@ -109,12 +102,12 @@ if (reiniciarBtn) {
     reiniciarBtn.addEventListener("click", reiniciarJuego);
 }
 
-// ===== DETECTOR GAME OVER (MEJORADO) =====
+// ===== GAME OVER CONTROL =====
 function checkGameOver() {
     if (jugador.vida <= 0 && juegoActivo) {
         juegoActivo = false;
 
-        // Mostrar puntaje
+        // Mostrar puntaje final
         if (puntajeFinalEl) {
             puntajeFinalEl.textContent = jugador.puntaje;
         }
@@ -130,7 +123,7 @@ function checkGameOver() {
     }
 }
 
-// Intervalo más optimizado
+// ⏱️ CHECK optimizado
 setInterval(checkGameOver, 300);
 
 // ===== INICIO DEL JUEGO =====
