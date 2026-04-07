@@ -94,7 +94,17 @@ function reiniciarJuego() {
     mensajeEl.textContent = "✨ ¡Nuevo juego iniciado!";
 
     // ▶️ REINICIAR LOOPS
-    iniciarLoops();
+function iniciarLoops() {
+    if (gameLoopActivo) return;
+
+    gameLoopActivo = true;
+
+    // ✅ INICIAR MOVIMIENTO
+    moverEnemigos();
+
+    intervaloAtaque = setInterval(() => {
+        if (juegoActivo) ataqueEnemigos();
+    }, 1200);
 }
 
 // ===== EVENTO BOTÓN =====
