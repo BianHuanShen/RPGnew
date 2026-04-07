@@ -1,28 +1,29 @@
 // ===============================
-// UI SYSTEM - ACTUALIZACIONES PRO
+// UI SYSTEM - ACTUALIZACIONES PRO (VERSION MEJORADA)
 // ===============================
 
 function actualizarUI() {
-    if (!vidaJugadorFill || !ataqueJugadorEl || !mensajeEl) return;
+    if (!jugador) return; // Protege si el jugador aún no está definido
 
     // ===== VIDA =====
     const porcentajeVida = Math.max(0, (jugador.vida / jugador.vidaMax) * 100);
-    vidaJugadorFill.style.width = `${porcentajeVida}%`;
+    if (vidaJugadorFill) {
+        vidaJugadorFill.style.width = `${porcentajeVida}%`;
 
-    if (porcentajeVida > 60) {
-        vidaJugadorFill.style.background = "linear-gradient(90deg, #2ecc71, #27ae60)";
-    } else if (porcentajeVida > 30) {
-        vidaJugadorFill.style.background = "linear-gradient(90deg, #f1c40f, #f39c12)";
-    } else {
-        vidaJugadorFill.style.background = "linear-gradient(90deg, #e74c3c, #c0392b)";
+        // Color según vida
+        vidaJugadorFill.style.background = porcentajeVida > 60
+            ? "linear-gradient(90deg, #2ecc71, #27ae60)"
+            : porcentajeVida > 30
+                ? "linear-gradient(90deg, #f1c40f, #f39c12)"
+                : "linear-gradient(90deg, #e74c3c, #c0392b)";
     }
 
     // ===== STATS =====
-    ataqueJugadorEl.textContent = Math.floor(jugador.ataque);
-    defensaJugadorEl.textContent = Math.floor(jugador.defensa);
-    magiaJugadorEl.textContent = jugador.magia;
-    nivelJugadorEl.textContent = jugador.nivel;
-    puntajeEl.textContent = jugador.puntaje;
+    if (ataqueJugadorEl) ataqueJugadorEl.textContent = Math.floor(jugador.ataque);
+    if (defensaJugadorEl) defensaJugadorEl.textContent = Math.floor(jugador.defensa);
+    if (magiaJugadorEl) magiaJugadorEl.textContent = jugador.magia;
+    if (nivelJugadorEl) nivelJugadorEl.textContent = jugador.nivel;
+    if (puntajeEl) puntajeEl.textContent = jugador.puntaje;
 
     // ===== MAGIA =====
     const maxMagiaBase = Math.floor(jugador.nivel / 3) * 2;
@@ -32,30 +33,30 @@ function actualizarUI() {
     // ===== INVENTARIO GENERAL =====
     if (listaInventarioEl) {
         listaInventarioEl.innerHTML = `
-            <li>🧪 Pociones: ${jugador.inventario.pocion}</li>
+            <li>🧪 Pociones: ${jugador.inventario.pocion || 0}</li>
 
             <li><b>🟢 Comunes</b></li>
-            <li>⚔️ Espadas: ${jugador.inventario.espada}</li>
-            <li>🛡️ Armaduras: ${jugador.inventario.armadura}</li>
-            <li>⛑️ Cascos: ${jugador.inventario.casco}</li>
-            <li>👢 Botas: ${jugador.inventario.botas}</li>
-            <li>👖 Pantalones: ${jugador.inventario.pantalon}</li>
+            <li>⚔️ Espadas: ${jugador.inventario.espada || 0}</li>
+            <li>🛡️ Armaduras: ${jugador.inventario.armadura || 0}</li>
+            <li>⛑️ Cascos: ${jugador.inventario.casco || 0}</li>
+            <li>👢 Botas: ${jugador.inventario.botas || 0}</li>
+            <li>👖 Pantalones: ${jugador.inventario.pantalon || 0}</li>
 
             <li><b>🔵 Raros</b></li>
-            <li>💎 Cristales: ${jugador.inventario.cristal}</li>
-            <li>🔮 Orbes: ${jugador.inventario.orbe}</li>
-            <li>🏹 Arcos: ${jugador.inventario.arco}</li>
-            <li>🗡️ Dagas: ${jugador.inventario.daga}</li>
-            <li>🧤 Guantes: ${jugador.inventario.guantes}</li>
+            <li>💎 Cristales: ${jugador.inventario.cristal || 0}</li>
+            <li>🔮 Orbes: ${jugador.inventario.orbe || 0}</li>
+            <li>🏹 Arcos: ${jugador.inventario.arco || 0}</li>
+            <li>🗡️ Dagas: ${jugador.inventario.daga || 0}</li>
+            <li>🧤 Guantes: ${jugador.inventario.guantes || 0}</li>
 
             <li><b>🟣 Épicos</b></li>
-            <li>🛡️ Armadura Épica: ${jugador.inventario.armaduraEpica}</li>
-            <li>👢 Botas Épicas: ${jugador.inventario.botasEpicas}</li>
-            <li>⛑️ Casco Épico: ${jugador.inventario.cascoEpico}</li>
+            <li>🛡️ Armadura Épica: ${jugador.inventario.armaduraEpica || 0}</li>
+            <li>👢 Botas Épicas: ${jugador.inventario.botasEpicas || 0}</li>
+            <li>⛑️ Casco Épico: ${jugador.inventario.cascoEpico || 0}</li>
 
             <li><b>🟡 Legendarios</b></li>
-            <li>⚔️ Espada Legendaria: ${jugador.inventario.espadaLegendaria}</li>
-            <li>🛡️ Armadura Legendaria: ${jugador.inventario.armaduraLegendaria}</li>
+            <li>⚔️ Espada Legendaria: ${jugador.inventario.espadaLegendaria || 0}</li>
+            <li>🛡️ Armadura Legendaria: ${jugador.inventario.armaduraLegendaria || 0}</li>
 
             <li><b>✨ Magia:</b> ${jugador.magia} / ${maxMagia} 
                 ${bonusOrbes > 0 ? `(+${bonusOrbes} bonus)` : ""}
@@ -64,35 +65,28 @@ function actualizarUI() {
     }
 
     // ===== BOTONES DINÁMICOS =====
-    const toggle = (btn, cond) => {
+    const botonesMap = [
+        [curarBtn, jugador.inventario.pocion > 0],
+        [usarCristalBtn, jugador.inventario.cristal > 0],
+        [usarOrbeBtn, jugador.inventario.orbe > 0],
+        [equiparArmaBtn, jugador.inventario.espada > 0],
+        [equiparArmaduraBtn, jugador.inventario.armadura > 0],
+        [equiparCascoBtn, jugador.inventario.casco > 0],
+        [equiparBotasBtn, jugador.inventario.botas > 0],
+        [equiparPantalonBtn, jugador.inventario.pantalon > 0],
+        [equiparArcoBtn, jugador.inventario.arco > 0],
+        [equiparDagaBtn, jugador.inventario.daga > 0],
+        [equiparGuantesBtn, jugador.inventario.guantes > 0],
+        [equiparArmaduraEpicaBtn, jugador.inventario.armaduraEpica > 0],
+        [equiparBotasEpicasBtn, jugador.inventario.botasEpicas > 0],
+        [equiparCascoEpicoBtn, jugador.inventario.cascoEpico > 0],
+        [equiparEspadaLegendariaBtn, jugador.inventario.espadaLegendaria > 0],
+        [equiparArmaduraLegendariaBtn, jugador.inventario.armaduraLegendaria > 0],
+    ];
+
+    botonesMap.forEach(([btn, cond]) => {
         if (btn) btn.style.display = cond ? "block" : "none";
-    };
-
-    // Consumibles
-    toggle(curarBtn, jugador.inventario.pocion > 0);
-    toggle(usarCristalBtn, jugador.inventario.cristal > 0);
-    toggle(usarOrbeBtn, jugador.inventario.orbe > 0);
-
-    // Comunes
-    toggle(equiparArmaBtn, jugador.inventario.espada > 0);
-    toggle(equiparArmaduraBtn, jugador.inventario.armadura > 0);
-    toggle(equiparCascoBtn, jugador.inventario.casco > 0);
-    toggle(equiparBotasBtn, jugador.inventario.botas > 0);
-    toggle(equiparPantalonBtn, jugador.inventario.pantalon > 0);
-
-    // Raros
-    toggle(equiparArcoBtn, jugador.inventario.arco > 0);
-    toggle(equiparDagaBtn, jugador.inventario.daga > 0);
-    toggle(equiparGuantesBtn, jugador.inventario.guantes > 0);
-
-    // Épicos
-    toggle(equiparArmaduraEpicaBtn, jugador.inventario.armaduraEpica > 0);
-    toggle(equiparBotasEpicasBtn, jugador.inventario.botasEpicas > 0);
-    toggle(equiparCascoEpicoBtn, jugador.inventario.cascoEpico > 0);
-
-    // Legendarios
-    toggle(equiparEspadaLegendariaBtn, jugador.inventario.espadaLegendaria > 0);
-    toggle(equiparArmaduraLegendariaBtn, jugador.inventario.armaduraLegendaria > 0);
+    });
 
     // ===== BARRAS MMORPG =====
     actualizarBarraMMORPG(porcentajeVida, maxMagia);
@@ -105,9 +99,7 @@ function actualizarBarraMMORPG(porcentajeVida, maxMagia) {
     const vidaBarra = document.getElementById("vidaBarra");
     const magiaBarra = document.getElementById("magiaBarra");
 
-    if (vidaBarra) {
-        vidaBarra.style.width = `${porcentajeVida}%`;
-    }
+    if (vidaBarra) vidaBarra.style.width = `${porcentajeVida}%`;
 
     if (magiaBarra) {
         const porcentajeMagia = maxMagia > 0 ? (jugador.magia / maxMagia) * 100 : 0;
@@ -127,18 +119,20 @@ function animarBoton(btn) {
 // ===============================
 // CSS DINÁMICO
 // ===============================
-const style = document.createElement("style");
-style.textContent = `
-.usar-item-anim {
-    animation: pulse 0.3s ease;
-}
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
-    100% { transform: scale(1); }
-}
-`;
-document.head.appendChild(style);
+(function() {
+    const style = document.createElement("style");
+    style.textContent = `
+        .usar-item-anim {
+            animation: pulse 0.3s ease;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+})();
 
 // ===============================
 // INVENTARIO POR CATEGORÍA (OPCIONAL)
