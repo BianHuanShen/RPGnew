@@ -458,7 +458,7 @@ function ataqueEnemigos() {
 
             // NUEVO: Modificadores de clase al atacar
             if (enemigo.claseInfo.clase === 'arquero') {
-                daño *= 1.2;
+                daño *= 0.6;
                 // Chance de esquivar flechas
                 if (Math.random() < 0.3) {
                     mensajeEl.innerHTML += `<br><span style="color:#3498db">¡Esquivaste flecha!</span>`;
@@ -466,11 +466,11 @@ function ataqueEnemigos() {
                 }
             }
             if (enemigo.claseInfo.clase === 'mago') {
-                daño += 5;
+                daño += 3;
                 daño += Math.floor(jugador.defensa * 0.3); // Ignora parte defensa
             }
             if (enemigo.claseInfo.clase === 'esqueleto') {
-                daño *= 1.1;
+                daño *= 0.7;
                 enemigo.vida = Math.min(enemigo.vidaMax, enemigo.vida + 2); // Vampirismo
             }
             // Guerrero usa ia antigua
