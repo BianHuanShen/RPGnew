@@ -20,9 +20,6 @@ function iniciarLoops() {
     intervaloAtaque = setInterval(() => {
         if (juegoActivo) ataqueEnemigos();
     }, 1200);
-
-    // 💀 Check Game Over
-    intervaloGameOver = setInterval(checkGameOver, 300);
 }
 
 // ===== DETENER LOOPS =====
@@ -32,11 +29,6 @@ function detenerLoops() {
     if (intervaloAtaque) {
         clearInterval(intervaloAtaque);
         intervaloAtaque = null;
-    }
-
-    if (intervaloGameOver) {
-        clearInterval(intervaloGameOver);
-        intervaloGameOver = null;
     }
 }
 
