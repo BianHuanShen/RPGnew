@@ -321,76 +321,42 @@ function generarNivel() {
     dibujarEnemigos();
     if (typeof actualizarUI === 'function') actualizarUI();
 }
+// ===============================
+// ATAQUE ENEMIGOS (POR TURNO)
+// ===============================
+function ataqueEnemigosTurno() {
+    enemigos.forEach(e => {
+        if (!e || e.vida <= 0) return;
 
-// ===== ATAQUE DEL JUGADOR MEJORADO =====
-function atacar() {
-    if (!juegoActivo || jugador.vida <= 0 || enemigos.length === 0) return;
+        let daño = e.ataque;
 
-    const enemigo = enemigos[0];
-    const enemigoDiv = gameArea.querySelector(`.enemigo[data-index="0"]`);
-    if (!enemigoDiv) return;
+        // IA
+        if (e.ia === "agresivo") daño *= 1.2;
+        if (e.ia === "defensivo") daño *= 0.7;
 
-    let daño = jugador.ataque + jugador.magia - enemigo.defensa;
+        // Clases
+        if (e.claseInfo.clase === 'mago') daño += 3;
 
-    if (enemigo.claseInfo.clase === 'mago') daño *= 1.1;
-    if (enemigo.claseInfo.clase === 'guerrero') daño *= 0.9;
+        if (e.claseInfo.clase === 'arquero') {
+            daño *= 0.6;
+            if (Math.random() < 0.3) return;
+        }
 
-    let mensaje = `⚔️ Atacas a ${enemigo.nombre}`;
+        if (e.claseInfo.clase === 'esqueleto') {
+            daño *= 0.7;
+            e.vida = Math.min(e.vidaMax, e.vida + 2);
+        }
 
-    if (esCritico()) {
-        daño *= 2;
-        mensaje = `💥 ¡CRÍTICO contra ${enemigo.nombre}!`;
-    }
+        daño -= jugador.defensa;
+        if (daño < 1) daño = 1;
 
-    if (daño < 2) daño = 2;
-    daño = Math.floor(daño);
+        jugador.vida -= Math.floor(daño);
+        jugador.vida = Math.max(0, jugador.vida);
+    });
 
-    enemigo.vida -= daño;
-    enemigo.vida = Math.max(0, enemigo.vida);
-
-    const fill = enemigoDiv.querySelector(".barra-vida-enemigo-fill");
-    if (fill) {
-        fill.style.width = `${(enemigo.vida / enemigo.vidaMax) * 100}%`;
-    }
-// NUEVO: Animación de daño visual
-enemigoDiv.style.filter = "brightness(2) sepia(1) hue-rotate(-50deg) saturate(5)";
-setTimeout(() => {
-    enemigoDiv.style.filter = "";
-}, 200);
-
-mensajeEl.innerHTML += `<br>Daño: <span style="color:#e74c3c">${daño}</span> HP`;
-
-if (enemigo.vida <= 0) {
-    enemigosDerrotadosNivel++;
-
-    // NUEVO: Puntos según clase y tipo
-    let puntos = 10;
-    if (enemigo.jefe) puntos = 50;
-    else if (enemigo.claseInfo.clase === 'esqueleto') puntos = 15;
-
-    jugador.puntaje += puntos;
-
-    // NUEVO: Curación escalada
-    const curacion = enemigo.jefe ? 30 : 10;
-    jugador.vida = Math.min(jugador.vidaMax, jugador.vida + curacion);
-
-    mensajeEl.innerHTML += `<br><span style="color:#2ecc71">★ ${enemigo.nombre} derrotado! +${puntos} pts, +${curacion} HP</span>`;
-
-    // NUEVO: Loot especial según clase
-    const loot = darLoot(enemigo.claseInfo.clase, enemigo.jefe);
-    if (loot) mensajeEl.innerHTML += `<br>🎁 ${loot}`;
-
-    if (sonidoLoot) sonidoLoot.play().catch(() => { });
-
-    enemigos.shift();
-    enemigoDiv.remove();
-
-    dibujarEnemigos();
+    actualizarUI?.();
 }
-
-actualizarUI();
-revisarEstado();
-// ===== ATAQUE ENEMIGOS MEJORADO =====
+// ===== ATAQUE ENEMIGOS =====
 function ataqueEnemigos() {
     if (!juegoActivo || jugador.vida <= 0) return;
 
@@ -497,6 +463,75 @@ function moverEnemigos() {
         requestAnimationFrame(moverEnemigos);
     }
 }
+// ===== ATAQUE DEL JUGADOR MEJORADO =====
+function atacar() {
+    if (!juegoActivo || jugador.vida <= 0 || enemigos.length === 0) return;
+
+    const enemigo = enemigos[0];
+    const enemigoDiv = gameArea.querySelector(`.enemigo[data-index="0"]`);
+    if (!enemigoDiv) return;
+
+    let daño = jugador.ataque + jugador.magia - enemigo.defensa;
+
+    if (enemigo.claseInfo.clase === 'mago') daño *= 1.1;
+    if (enemigo.claseInfo.clase === 'guerrero') daño *= 0.9;
+
+    let mensaje = `⚔️ Atacas a ${enemigo.nombre}`;
+
+    if (esCritico()) {
+        daño *= 2;
+        mensaje = `💥 ¡CRÍTICO contra ${enemigo.nombre}!`;
+    }
+
+    if (daño < 2) daño = 2;
+    daño = Math.floor(daño);
+
+    enemigo.vida -= daño;
+    enemigo.vida = Math.max(0, enemigo.vida);
+
+    const fill = enemigoDiv.querySelector(".barra-vida-enemigo-fill");
+    if (fill) {
+        fill.style.width = `${(enemigo.vida / enemigo.vidaMax) * 100}%`;
+    }
+// NUEVO: Animación de daño visual
+enemigoDiv.style.filter = "brightness(2) sepia(1) hue-rotate(-50deg) saturate(5)";
+setTimeout(() => {
+    enemigoDiv.style.filter = "";
+}, 200);
+
+mensajeEl.innerHTML += `<br>Daño: <span style="color:#e74c3c">${daño}</span> HP`;
+
+if (enemigo.vida <= 0) {
+    enemigosDerrotadosNivel++;
+
+    // NUEVO: Puntos según clase y tipo
+    let puntos = 10;
+    if (enemigo.jefe) puntos = 50;
+    else if (enemigo.claseInfo.clase === 'esqueleto') puntos = 15;
+
+    jugador.puntaje += puntos;
+
+    // NUEVO: Curación escalada
+    const curacion = enemigo.jefe ? 30 : 10;
+    jugador.vida = Math.min(jugador.vidaMax, jugador.vida + curacion);
+
+    mensajeEl.innerHTML += `<br><span style="color:#2ecc71">★ ${enemigo.nombre} derrotado! +${puntos} pts, +${curacion} HP</span>`;
+
+    // NUEVO: Loot especial según clase
+    const loot = darLoot(enemigo.claseInfo.clase, enemigo.jefe);
+    if (loot) mensajeEl.innerHTML += `<br>🎁 ${loot}`;
+
+    if (sonidoLoot) sonidoLoot.play().catch(() => { });
+
+    enemigos.shift();
+    enemigoDiv.remove();
+
+    dibujarEnemigos();
+}
+// 👊 Enemigos responden al ataque (modo turno)
+ataqueEnemigosTurno();
+actualizarUI();
+revisarEstado();
 // ===== REVISAR ESTADO MEJORADO =====
 function revisarEstado() {
     if (jugador.vida <= 0) {
