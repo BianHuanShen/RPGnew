@@ -553,6 +553,7 @@ function atacar() {
     revisarEstado();
 }
 // ===== REVISAR ESTADO MEJORADO =====
+// ===== REVISAR ESTADO MEJORADO (FIX FINAL) =====
 function revisarEstado() {
     // 💀 GAME OVER
     if (jugador.vida <= 0) {
@@ -560,13 +561,15 @@ function revisarEstado() {
         juegoActivo = false;
 
         mensajeEl.innerHTML = `
-        <span style='color:#e74c3c;font-size:18px'>
-        💀 HAS SIDO DERROTADO 💀
-        </span>`;
+            <span style="color:#e74c3c;font-size:18px">
+                💀 HAS SIDO DERROTADO 💀
+            </span>
+        `;
 
         bloquearBotones();
         return;
     }
+
     // ✅ NIVEL COMPLETADO
     if (enemigos.length === 0) {
         const bonusNivel = nivelActual * 5;
@@ -574,35 +577,33 @@ function revisarEstado() {
 
         nivelActual++;
         jugador.nivel++;
-        // ❤️ Mejora de vida
+
         jugador.vidaMax += 10;
         jugador.vida = jugador.vidaMax;
-        // 📈 Stats cada 3 niveles
-        if (nivelActual % 3 === 0) {
+
+        // 📈 Mejora de stats cada 3 niveles
+        if (jugador.nivel % 3 === 0) {
             jugador.ataque += 2;
             jugador.defensa += 1;
         }
-        // 🧠 MENSAJE LIMPIO (sin sobrescribir)
-        let mensaje = `
-        <span style="color:#f1c40f;font-size:16px">
-        ✨ ¡NIVEL ${jugador.nivel} COMPLETADO! ✨
-        </span>
-        <br>+${bonusNivel} pts bonus, Vida restaurada`;
 
-        // 🎁 LOOT (bien integrado)
+        // 🎁 Loot final (guardado correctamente)
+        let lootFinal = "";
         if (typeof darLoot === "function") {
-            const lootFinal = darLoot();
-            if (lootFinal) {
-                mensaje += `<br>${lootFinal}`;
-            }
+            lootFinal = darLoot() || "";
         }
 
-        mensajeEl.innerHTML = mensaje;
+        // 📝 Mensaje FINAL (ya no se pisa)
+        mensajeEl.innerHTML = `
+            <span style="color:#f1c40f;font-size:16px">
+                ✨ ¡NIVEL ${jugador.nivel} COMPLETADO! ✨
+            </span>
+            <br>+${bonusNivel} pts bonus
+            <br>❤️ Vida restaurada
+            ${lootFinal ? `<br>🎁 ${lootFinal}` : ""}
+        `;
 
-        // ⏳ Siguiente nivel
-        setTimeout(() => {
-            generarNivel();
-        }, 2000);
+        setTimeout(generarNivel, 2000);
     }
 }
 // ===== BLOQUEAR/DESBLOQUEAR BOTONES =====
