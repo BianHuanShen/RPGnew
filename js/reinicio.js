@@ -20,6 +20,9 @@ function iniciarLoops() {
     intervaloAtaque = setInterval(() => {
         if (juegoActivo) ataqueEnemigos();
     }, 1200);
+
+    // 💀 Check Game Over
+    intervaloGameOver = setInterval(checkGameOver, 300);
 }
 
 // ===== DETENER LOOPS =====
@@ -29,6 +32,11 @@ function detenerLoops() {
     if (intervaloAtaque) {
         clearInterval(intervaloAtaque);
         intervaloAtaque = null;
+    }
+
+    if (intervaloGameOver) {
+        clearInterval(intervaloGameOver);
+        intervaloGameOver = null;
     }
 }
 
@@ -47,6 +55,7 @@ function checkGameOver() {
         detenerLoops();
     }
 }
+
 // ===== MODAL GAME OVER =====
 const modalGameOver = document.createElement("div");
 modalGameOver.id = "modalGameOver";
@@ -125,5 +134,8 @@ function getIconoClase(clase) {
     return iconos[clase] || '?';
 }
 
-// ===== INICIO DEL JUEGO =====
-iniciarLoops();
+// ===== INICIO CORRECTO DEL JUEGO =====
+document.addEventListener("DOMContentLoaded", () => {
+    generarNivel();   // 🔥 crear enemigos primero
+    iniciarLoops();   // 🔥 luego iniciar loops
+});
