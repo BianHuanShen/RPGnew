@@ -449,7 +449,7 @@ function ataqueEnemigos() {
 }
 // ===== MOVIMIENTO ENEMIGOS MEJORADO =====
 function moverEnemigos() {
-    if (!juegoActivo) return;
+    if (!juegoActivo || !gameLoopActivo) return;
 
     const jx = jugadorDiv.offsetLeft + jugadorDiv.offsetWidth / 2;
     const jy = jugadorDiv.offsetTop + jugadorDiv.offsetHeight / 2;
