@@ -509,7 +509,10 @@ function ataqueEnemigos() {
 
 // ===== MOVIMIENTO ENEMIGOS MEJORADO =====
 function moverEnemigos() {
-    if (!juegoActivo) return;
+    if (!juegoActivo) {
+        requestAnimationFrame(moverEnemigos);
+        return;
+    }
 
     const jx = jugadorDiv.offsetLeft + jugadorDiv.offsetWidth / 2;
     const jy = jugadorDiv.offsetTop + jugadorDiv.offsetHeight / 2;
@@ -520,28 +523,28 @@ function moverEnemigos() {
 
         const ex = enemigoDiv.offsetLeft + enemigoDiv.offsetWidth / 2;
         const ey = enemigoDiv.offsetTop + enemigoDiv.offsetHeight / 2;
+
         const dx = jx - ex;
         const dy = jy - ey;
-        const distancia = Math.sqrt(dx * dx + dy * dy);
 
-        // NUEVO: Velocidad y comportamiento por clase
+        // 🔥 FIX BUG (división por 0)
+        const distancia = Math.sqrt(dx * dx + dy * dy) || 1;
+
         let velocidad = enemigo.velocidad;
 
+        // Comportamiento por clase
         if (enemigo.claseInfo.clase === 'arquero') {
-            // Mantiene distancia óptima
-            if (distancia < 80) velocidad *= -1; // Retrocede
+            if (distancia < 80) velocidad *= -1; // retrocede
         } else if (enemigo.claseInfo.clase === 'mago') {
-            velocidad *= 0.6; // Lento pero letal
-        } else if (enemigo.ia === "agresivo") {
-            velocidad *= 1.3;
-        } else if (enemigo.ia === "defensivo") {
             velocidad *= 0.6;
         }
 
         const rangoAtaque = enemigo.claseInfo.clase === 'arquero' ? 100 : 60;
 
-        if (distancia > rangoAtaque || (enemigo.claseInfo.clase === 'arquero' && distancia < 60)) {
-            const moveX = (dx / distancia) * velocidad + Math.sin(Date.now() / 300 + i) * 0.5;
+        // 🔥 FIX: eliminar zonas seguras
+        if (distancia > rangoAtaque * 0.7) {
+
+            const moveX = (dx / distancia) * velocidad;
             const moveY = (dy / distancia) * velocidad;
 
             const newLeft = enemigoDiv.offsetLeft + moveX;
@@ -557,7 +560,6 @@ function moverEnemigos() {
 
     requestAnimationFrame(moverEnemigos);
 }
-
 // ===== REVISAR ESTADO MEJORADO =====
 function revisarEstado() {
     if (jugador.vida <= 0) {
