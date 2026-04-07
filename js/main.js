@@ -325,6 +325,8 @@ function generarNivel() {
 // ATAQUE ENEMIGOS (POR TURNO)
 // ===============================
 function ataqueEnemigosTurno() {
+    let dañoTotal = 0;
+
     enemigos.forEach(e => {
         if (!e || e.vida <= 0) return;
 
@@ -335,24 +337,33 @@ function ataqueEnemigosTurno() {
         if (e.ia === "defensivo") daño *= 0.7;
 
         // Clases
-        if (e.claseInfo.clase === 'mago') daño += 3;
+        switch (e.claseInfo.clase) {
+            case 'mago':
+                daño += 3;
+                break;
 
-        if (e.claseInfo.clase === 'arquero') {
-            daño *= 0.6;
-            if (Math.random() < 0.3) return;
-        }
+            case 'arquero':
+                daño *= 0.6;
+                if (Math.random() < 0.3) return;
+                break;
 
-        if (e.claseInfo.clase === 'esqueleto') {
-            daño *= 0.7;
-            e.vida = Math.min(e.vidaMax, e.vida + 2);
+            case 'esqueleto':
+                daño *= 0.7;
+                e.vida = Math.min(e.vidaMax, e.vida + 2);
+                break;
         }
 
         daño -= jugador.defensa;
         if (daño < 1) daño = 1;
 
-        jugador.vida -= Math.floor(daño);
-        jugador.vida = Math.max(0, jugador.vida);
+        daño = Math.floor(daño);
+        dañoTotal += daño;
     });
+
+    if (dañoTotal > 0) {
+        jugador.vida -= dañoTotal;
+        jugador.vida = Math.max(0, jugador.vida);
+    }
 
     actualizarUI?.();
 }
@@ -363,50 +374,56 @@ function ataqueEnemigos() {
     const jx = jugadorDiv.offsetLeft + jugadorDiv.offsetWidth / 2;
     const jy = jugadorDiv.offsetTop + jugadorDiv.offsetHeight / 2;
 
-    document.querySelectorAll(".enemigo").forEach((enemigoDiv) => {
-        const index = enemigoDiv.dataset.index;
-        const enemigo = enemigos[index];
+    let dañoTotal = 0;
 
+    document.querySelectorAll(".enemigo").forEach((enemigoDiv) => {
+        const enemigo = enemigos[enemigoDiv.dataset.index];
         if (!enemigo || enemigo.vida <= 0) return;
 
         const ex = enemigoDiv.offsetLeft + enemigoDiv.offsetWidth / 2;
         const ey = enemigoDiv.offsetTop + enemigoDiv.offsetHeight / 2;
-        const distancia = Math.sqrt((jx - ex) ** 2 + (jy - ey) ** 2);
+        const distancia = Math.hypot(jx - ex, jy - ey);
 
-        let rangoAtaque = 60;
-        if (enemigo.claseInfo.clase === 'arquero') rangoAtaque = 120;
-        if (enemigo.claseInfo.clase === 'mago') rangoAtaque = 100;
+        let rango = 60;
+        if (enemigo.claseInfo.clase === 'arquero') rango = 120;
+        if (enemigo.claseInfo.clase === 'mago') rango = 100;
 
-        if (distancia <= rangoAtaque) {
-            let daño = enemigo.ataque;
+        if (distancia > rango) return;
 
-            if (enemigo.claseInfo.clase === 'arquero') {
+        let daño = enemigo.ataque;
+
+        // Clases
+        switch (enemigo.claseInfo.clase) {
+            case 'arquero':
                 daño *= 0.6;
                 if (Math.random() < 0.3) return;
-            }
+                break;
 
-            if (enemigo.claseInfo.clase === 'mago') {
-                daño += 3;
-                daño += Math.floor(jugador.defensa * 0.3);
-            }
+            case 'mago':
+                daño += 3 + Math.floor(jugador.defensa * 0.3);
+                break;
 
-            if (enemigo.claseInfo.clase === 'esqueleto') {
+            case 'esqueleto':
                 daño *= 0.7;
                 enemigo.vida = Math.min(enemigo.vidaMax, enemigo.vida + 2);
-            }
-
-            if (enemigo.ia === "agresivo") daño *= 1.2;
-            if (enemigo.ia === "defensivo") daño *= 0.7;
-
-            daño -= jugador.defensa;
-            if (daño < 1) daño = 1;
-
-            jugador.vida -= Math.floor(daño);
-            jugador.vida = Math.max(0, jugador.vida);
-
-            actualizarUI?.();
+                break;
         }
+
+        // IA
+        if (enemigo.ia === "agresivo") daño *= 1.2;
+        if (enemigo.ia === "defensivo") daño *= 0.7;
+
+        daño -= jugador.defensa;
+        if (daño < 1) daño = 1;
+
+        dañoTotal += Math.floor(daño);
     });
+
+    if (dañoTotal > 0) {
+        jugador.vida -= dañoTotal;
+        jugador.vida = Math.max(0, jugador.vida);
+        actualizarUI?.();
+    }
 }
 // ===== MOVIMIENTO ENEMIGOS MEJORADO =====
 function moverEnemigos() {
@@ -493,45 +510,48 @@ function atacar() {
     if (fill) {
         fill.style.width = `${(enemigo.vida / enemigo.vidaMax) * 100}%`;
     }
-// NUEVO: Animación de daño visual
-enemigoDiv.style.filter = "brightness(2) sepia(1) hue-rotate(-50deg) saturate(5)";
-setTimeout(() => {
-    enemigoDiv.style.filter = "";
-}, 200);
 
-mensajeEl.innerHTML += `<br>Daño: <span style="color:#e74c3c">${daño}</span> HP`;
+    // Animación
+    enemigoDiv.style.filter = "brightness(2) sepia(1) hue-rotate(-50deg)";
+    setTimeout(() => enemigoDiv.style.filter = "", 200);
 
-if (enemigo.vida <= 0) {
-    enemigosDerrotadosNivel++;
+    mensaje += `<br>Daño: <span style="color:#e74c3c">${daño}</span> HP`;
 
-    // NUEVO: Puntos según clase y tipo
-    let puntos = 10;
-    if (enemigo.jefe) puntos = 50;
-    else if (enemigo.claseInfo.clase === 'esqueleto') puntos = 15;
+    if (enemigo.vida <= 0) {
+        enemigosDerrotadosNivel++;
 
-    jugador.puntaje += puntos;
+        let puntos = enemigo.jefe ? 50 : 10;
+        if (enemigo.claseInfo.clase === 'esqueleto') puntos = 15;
 
-    // NUEVO: Curación escalada
-    const curacion = enemigo.jefe ? 30 : 10;
-    jugador.vida = Math.min(jugador.vidaMax, jugador.vida + curacion);
+        jugador.puntaje += puntos;
 
-    mensajeEl.innerHTML += `<br><span style="color:#2ecc71">★ ${enemigo.nombre} derrotado! +${puntos} pts, +${curacion} HP</span>`;
+        const curacion = enemigo.jefe ? 30 : 10;
+        jugador.vida = Math.min(jugador.vidaMax, jugador.vida + curacion);
 
-    // NUEVO: Loot especial según clase
-    const loot = darLoot(enemigo.claseInfo.clase, enemigo.jefe);
-    if (loot) mensajeEl.innerHTML += `<br>🎁 ${loot}`;
+        mensaje += `<br>✅ ${enemigo.nombre} derrotado (+${puntos} pts, +${curacion} HP)`;
 
-    if (sonidoLoot) sonidoLoot.play().catch(() => { });
+        // 🎁 LOOT CORRECTO
+        let lootMsg = darLoot(); // ← SOLO esto
 
-    enemigos.shift();
-    enemigoDiv.remove();
+        if (lootMsg) {
+            mensaje += `<br>${lootMsg}`;
+        }
 
-    dibujarEnemigos();
+        if (sonidoLoot) sonidoLoot.play().catch(() => { });
+
+        enemigos.shift();
+        enemigoDiv.remove();
+        dibujarEnemigos();
+    }
+
+    // 👊 Contraataque
+    ataqueEnemigosTurno();
+
+    mensajeEl.innerHTML = mensaje;
+
+    actualizarUI();
+    revisarEstado();
 }
-// 👊 Enemigos responden al ataque (modo turno)
-ataqueEnemigosTurno();
-actualizarUI();
-revisarEstado();
 // ===== REVISAR ESTADO MEJORADO =====
 function revisarEstado() {
     if (jugador.vida <= 0) {
