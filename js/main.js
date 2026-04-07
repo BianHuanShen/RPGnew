@@ -352,21 +352,44 @@ function atacar() {
     if (fill) {
         fill.style.width = `${(enemigo.vida / enemigo.vidaMax) * 100}%`;
     }
+// NUEVO: Animación de daño visual
+enemigoDiv.style.filter = "brightness(2) sepia(1) hue-rotate(-50deg) saturate(5)";
+setTimeout(() => {
+    enemigoDiv.style.filter = "";
+}, 200);
 
-    mensaje += `<br>Daño: <span style="color:#e74c3c">${daño}</span> HP`;
+mensajeEl.innerHTML += `<br>Daño: <span style="color:#e74c3c">${daño}</span> HP`;
 
-    if (enemigo.vida <= 0) {
-        enemigos.shift();
-        enemigoDiv.remove();
-        mensaje += `<br>✅ ${enemigo.nombre} derrotado`;
-        dibujarEnemigos();
-    }
+if (enemigo.vida <= 0) {
+    enemigosDerrotadosNivel++;
 
-    mensajeEl.innerHTML = mensaje;
+    // NUEVO: Puntos según clase y tipo
+    let puntos = 10;
+    if (enemigo.jefe) puntos = 50;
+    else if (enemigo.claseInfo.clase === 'esqueleto') puntos = 15;
 
-    actualizarUI?.();
-    revisarEstado();
+    jugador.puntaje += puntos;
+
+    // NUEVO: Curación escalada
+    const curacion = enemigo.jefe ? 30 : 10;
+    jugador.vida = Math.min(jugador.vidaMax, jugador.vida + curacion);
+
+    mensajeEl.innerHTML += `<br><span style="color:#2ecc71">★ ${enemigo.nombre} derrotado! +${puntos} pts, +${curacion} HP</span>`;
+
+    // NUEVO: Loot especial según clase
+    const loot = darLoot(enemigo.claseInfo.clase, enemigo.jefe);
+    if (loot) mensajeEl.innerHTML += `<br>🎁 ${loot}`;
+
+    if (sonidoLoot) sonidoLoot.play().catch(() => { });
+
+    enemigos.shift();
+    enemigoDiv.remove();
+
+    dibujarEnemigos();
 }
+
+actualizarUI();
+revisarEstado();
 // ===== ATAQUE ENEMIGOS MEJORADO =====
 function ataqueEnemigos() {
     if (!juegoActivo || jugador.vida <= 0) return;
