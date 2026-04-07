@@ -1,4 +1,37 @@
-﻿/* ======================================= */
+
+.inventario-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inventario-contenido {
+    background: #1e1e2f;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    color: white;
+    box-shadow: 0 0 20px #000;
+}
+
+#listaInventario {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#listaInventario li {
+    margin: 4px 0;
+}
+/* ======================================= */
 /* JUGADOR - VERSIÓN IMPONENTE v3.0       */
 /* ======================================= */
 #jugador {
