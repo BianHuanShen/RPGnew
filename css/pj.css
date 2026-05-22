@@ -283,7 +283,7 @@
 
 /* ======================================= */
 /* BARRAS DE VIDA                          */
-/* ======================================= 
+/* ======================================= */
 .barra-vida {
     width: 100%;
     height: 22px;
@@ -301,7 +301,7 @@
     background: linear-gradient(90deg, #e74c3c, #c0392b);
     border-radius: 6px;
     transition: width 0.3s ease, background 0.3s ease;
-}*/
+}
 
 .barra-vida-enemigo {
     position: absolute;
