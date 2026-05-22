@@ -279,7 +279,7 @@ function dibujarEnemigos() {
         claseIndicador.textContent = getIconoClase(e.claseInfo.clase);
         div.appendChild(claseIndicador);
 
-        // Barra de vida mejorada
+        /* Barra de vida mejorada
         const barra = document.createElement("div");
         barra.classList.add("barra-vida-enemigo");
 
@@ -294,6 +294,7 @@ function dibujarEnemigos() {
 
         barra.appendChild(fill);
         div.appendChild(barra);
+        */
 
         // NUEVO: Nombre del enemigo
         const nombreTag = document.createElement("div");
